@@ -17,14 +17,14 @@ const PieRemovedLines: React.FC<PieChartProps> = ({ data }) => {
   const options = {
     chart: {
       id: 'pie',
-      width: 500,
+      width: "100%",
     },
     labels: labels,
     responsive: [{
       breakpoint: 600,
       options: {
         chart: {
-          width: 400
+          width: "100%"
         },
         legend: {
           position: 'bottom'
@@ -34,8 +34,7 @@ const PieRemovedLines: React.FC<PieChartProps> = ({ data }) => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Linhas removidas</h2>
+    <div className="w-full">
       <div id="chart">
         <Chart
          options={options}

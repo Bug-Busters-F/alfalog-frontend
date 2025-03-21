@@ -15,13 +15,13 @@ const BarRemovedLines: React.FC<BarChartProps> = ({ data }) => {
   const series = [{
     data: data.map((item) => item.value)
   }];
-  
+
   const categories = data.map((item) => item.filter);
 
   const options = {
     chart: {
       id: 'bar',
-      height: 350
+      height: "100%"
     },
     plotOptions: {
       bar: {
@@ -34,12 +34,22 @@ const BarRemovedLines: React.FC<BarChartProps> = ({ data }) => {
     },
     xaxis: {
       categories: categories,
-    }
+    },
+      responsive: [
+          {
+              breakpoint: 600,
+              options: {
+                  chart: {
+                      height: "auto"
+                  }
+              }
+          }
+      ]
+
   };
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Linhas removidas</h2>
       <div id="chart">
         <Chart
          options={options}
