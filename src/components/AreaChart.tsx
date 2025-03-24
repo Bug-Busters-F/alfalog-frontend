@@ -78,7 +78,7 @@ const AreaChart: React.FC<AreaChartProps> = (props: AreaChartProps) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Evolução do Preço Agregado</h2>
+      <h2 className="text-xl font-bold mb-4">Evolução da Balança Comercial</h2>
       <Chart
         options={options}
         series={series}
