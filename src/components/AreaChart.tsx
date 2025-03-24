@@ -1,6 +1,5 @@
 import React from "react";
 import Chart from "react-apexcharts";
-import { data } from "react-router-dom";
 
 // Definindo a tipagem para as opções do gráfico
 interface ChartOptions {
