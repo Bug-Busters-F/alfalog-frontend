@@ -11,7 +11,7 @@ const BrazilMapComponent: React.FC = () => {
   const handleSelect = (state: string | null) => {
     if (state) {
       setSelectedState(state);
-      setChartKey((prevKey) => prevKey + 1) //att o grafico
+      setChartKey((prevKey) => prevKey + 1) //att o grafico 
     }
   }
 
@@ -52,38 +52,56 @@ const BrazilMapComponent: React.FC = () => {
   console.log(selectedState)
   
   return (
-    <div>
-      <Brazil
-        type="select-single"
-        size={400}
-        mapColor="#e0e0e0"
-        strokeColor="#000"
-        strokeWidth={1}
-        hoverColor="#a4e44f"
-        selectColor="#6eb8f5"
-        hints={true}
-        hintTextColor="white"
-        hintBackgroundColor="black"
-        onSelect={handleSelect}
-      />
-      
-      {selectedState && (
-        <div key={chartKey}> 
-          <h3>Dados do estado: {selectedState}</h3>
-            <AreaChart data={data}>
-            </AreaChart>
-            <div className="flex flex-col md:flex-row">
-              <div className="w-full md:w-1/2 p-2">
-                <ExportValueAddedTable data={testData}/>
+    <div className="flex flex-col justify-center items-center">
+      {/* Div Mapa e Grafico */}
+      <div className="w-full flex flex-wrap md:flex-col items-center">
+        
+        {/* Mapa */}
+        <div>
+          <Brazil
+            type="select-single"
+            size={400}
+            mapColor="#B4DCFB"
+            strokeColor="#000"
+            strokeWidth={0.7}
+            hoverColor="oklch(0.685 0.169 237.323)"
+            selectColor="oklch(0.391 0.09 240.876)"
+            hints={true}
+            hintTextColor="white"
+            hintBackgroundColor="oklch(0.391 0.09 240.876)"
+            onSelect={handleSelect}
+          />
+        </div>
+  
+        {/* Gráfico (Quebrará para baixo em telas pequenas) */}
+        {selectedState && (
+          <div key={chartKey} className="w-full md:mt-4">
+            <h3>Dados do estado: {selectedState}</h3>
+            <div>
+              <AreaChart data={data} />
+            </div>
+          </div>
+        )}
+      </div>
+  
+      {/* Div Tabelas Estados */}
+      <div className="w-full">
+        {selectedState && (
+          <div key={chartKey}>
+            <h3>Dados do estado: {selectedState}</h3>
+            <div className="flex w-full flex-col md:flex-row">
+              <div className="w-full p-2">
+                <ExportValueAddedTable data={testData} />
               </div>
-              <div className="w-full md:w-1/2 p-2">
-                <TableOfMainExportCargoes data={testData2}/>
+              <div className="w-full p-2">
+                <TableOfMainExportCargoes data={testData2} />
               </div>
             </div>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }
 
 export default BrazilMapComponent;

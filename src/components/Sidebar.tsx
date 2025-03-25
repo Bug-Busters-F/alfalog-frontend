@@ -42,15 +42,21 @@ export default function SidebarLayout({ children }: SideBarProps) {
         </center>
         <nav>
           <ul className="pt-2">
-            <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-              <a href="#">Dashboard</a>
-            </li>
-            <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-              <a href="#">Relatórios</a>
-            </li>
-            <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-              <a href="#">Alguma outra coisa</a>
-            </li>
+            <a href="#">
+              <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                Dashboard
+              </li>
+            </a>
+            <a href="#">
+              <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+              Relatórios
+              </li>
+            </a>
+            <a href="#">
+              <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                Alguma outra coisa
+              </li>
+            </a>
           </ul>
         </nav>
       </div>
