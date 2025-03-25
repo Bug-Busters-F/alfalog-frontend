@@ -53,10 +53,8 @@ const BrazilMapComponent: React.FC = () => {
   
   return (
     <div className="flex flex-col justify-center items-center">
-      {/* Div Mapa e Grafico */}
       <div className="w-full flex flex-wrap md:flex-col items-center">
         
-        {/* Mapa */}
         <div>
           <Brazil
             type="select-single"
@@ -73,7 +71,6 @@ const BrazilMapComponent: React.FC = () => {
           />
         </div>
   
-        {/* Gráfico (Quebrará para baixo em telas pequenas) */}
         {selectedState && (
           <div key={chartKey} className="w-full md:mt-4">
             <h3>Dados do estado: {selectedState}</h3>
@@ -83,8 +80,7 @@ const BrazilMapComponent: React.FC = () => {
           </div>
         )}
       </div>
-  
-      {/* Div Tabelas Estados */}
+
       <div className="w-full">
         {selectedState && (
           <div key={chartKey}>
