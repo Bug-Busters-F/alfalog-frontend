@@ -16,7 +16,7 @@ const data = [
 const ReportData = () => {
     return (
         <SidebarLayout>
-            <h2 className="text-xl font-bold mb-4">Linhas removidas</h2>
+            <h2 className="text-xl text-center font-bold mb-4">Linhas removidas</h2>
             <div className="flex flex-col md:flex-row">
                 <div className="w-full md:w-1/2">
                     <PieRemovedLines data={data} />
