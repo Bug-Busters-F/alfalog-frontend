@@ -1,6 +1,7 @@
 import Hamburger from "hamburger-react";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
+import YearForm from "./YearForm";
 
 interface SideBarProps {
   children?: ReactNode;
@@ -57,6 +58,9 @@ export default function SidebarLayout({ children }: SideBarProps) {
                 Alguma outra coisa
               </li>
             </a>
+            <li>
+              <YearForm/>
+            </li>
           </ul>
         </nav>
       </div>
