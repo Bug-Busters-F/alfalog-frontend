@@ -1,12 +1,15 @@
 import SidebarLayout from "../components/Sidebar";
 import BrazilMapComponent from "../components/BrazilMap";
+import { GlobalYearStateProvider } from "../context/GlobalYearStateContext";
 
 const Home = () => {
     return(
     <div>
-      <SidebarLayout>
-        <BrazilMapComponent />
-      </SidebarLayout>
+      <GlobalYearStateProvider>
+        <SidebarLayout>
+          <BrazilMapComponent />
+        </SidebarLayout>
+      </GlobalYearStateProvider>
     </div>
   )
   };

@@ -34,50 +34,37 @@ export default function ExportValueAddedTable({
         <table className="w-full text-sm text-left text-gray-200">
           <thead className="text-xs uppercase bg-sky-500 text-white">
             <tr>
-              <th scope="col" className="px-6 py-3">
-                NCM
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Nome
-              </th>
-              <th scope="col" className="px-6 py-3">
-                País
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Via
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Valor
-              </th>
+              <th scope="col" className="px-4 py-3 w-24">NCM</th>
+              <th scope="col" className="px-4 py-3 min-w-[120px]">Nome</th>
+              <th scope="col" className="px-4 py-3 w-32">País</th>
+              <th scope="col" className="px-4 py-3 w-24">Via</th>
+              <th scope="col" className="px-4 py-3 w-32 text-right">Valor</th>
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item) => (
+            {currentData.map((item, index) => (
               <tr
-                key={item.ncm}
+                key={`${item.ncm}-${index}`}
                 className="bg-gray-200 border-b border-sky-700 hover:bg-gray-300"
               >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-black whitespace-nowrap"
-                >
+                <th scope="row" className="px-4 py-4 font-medium text-black whitespace-nowrap">
                   {item.ncm}
                 </th>
-                <td
-                  className="px-6 py-4 max-w-[150px] md:truncate whitespace-nowrap overflow-hidden cursor-pointer text-black"
-                  title={item.nome}
-                >
-                  <span className="md:hidden">{item.nome}</span>
-                  <span className="hidden md:inline">
-                    {item.nome.length > 10
-                      ? `${item.nome.slice(0, 10)}...`
-                      : item.nome}
-                  </span>
+                <td className="px-4 py-4 text-black whitespace-nowrap">
+                  {item.nome}
                 </td>
-
-                <td className="px-6 py-4 text-black">{item.pais}</td>
-                <td className="px-6 py-4 text-black">{item.via}</td>
-                <td className="px-6 py-4 text-black">{item.valor}</td>
+                <td className="px-4 py-4 text-black whitespace-nowrap">
+                  {item.pais}
+                </td>
+                <td className="px-4 py-4 text-black whitespace-nowrap">
+                  {item.via}
+                </td>
+                <td className="px-4 py-4 text-black text-right whitespace-nowrap">
+                  {item.valor.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -96,9 +83,7 @@ export default function ExportValueAddedTable({
         </span>
         <button
           className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50"
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
         >
           Avançar

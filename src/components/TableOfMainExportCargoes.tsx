@@ -3,9 +3,8 @@ import { useState } from "react";
 interface Data {
   ncm: string;
   nome: string;
-  peso: number
+  peso: number;
 }
-
 
 interface TableOfMainExportCargoesProps {
   data: Data[];
@@ -26,19 +25,26 @@ export default function TableOfMainExportCargoes({ data }: TableOfMainExportCarg
         <table className="w-full text-sm text-left text-gray-200">
           <thead className="text-xs uppercase bg-sky-500 text-white">
             <tr>
-              <th scope="col" className="px-6 py-3">NCM</th>
-              <th scope="col" className="px-6 py-3">Nome</th>
-              <th scope="col" className="px-6 py-3">Peso</th>
+              <th scope="col" className="px-4 py-3 w-24">NCM</th>
+              <th scope="col" className="px-4 py-3 min-w-[120px]">Nome</th>
+              <th scope="col" className="px-4 py-3 w-32">Peso</th>
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item) => (
-              <tr key={item.ncm} className="bg-gray-200 border-b border-sky-700 hover:bg-gray-300">
-                <th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+            {currentData.map((item, index) => (
+              <tr
+                key={`${item.ncm}-${index}`}
+                className="bg-gray-200 border-b border-sky-700 hover:bg-gray-300"
+              >
+                <th scope="row" className="px-4 py-4 font-medium text-black whitespace-nowrap">
                   {item.ncm}
                 </th>
-                <td className="px-6 py-4 text-black">{item.nome}</td>
-                <td className="px-6 py-4 text-black">{item.peso}</td>
+                <td className="px-4 py-4 text-black whitespace-nowrap">
+                  {item.nome}
+                </td>
+                <td className="px-4 py-4 text-black whitespace-nowrap">
+                  {item.peso.toLocaleString('pt-BR')}
+                </td>
               </tr>
             ))}
           </tbody>
