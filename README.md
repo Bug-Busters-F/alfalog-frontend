@@ -4,6 +4,8 @@ Frontend do Projeto de API - 3° Semestre (2025) da Fatec São José dos Campos 
 
 Este projeto é uma aplicação front-end desenvolvida em React com Vite e Tailwind CSS, que consome uma REST API construída com Flask em Python.
 
+Veja o repositório Pai aqui --> https://github.com/Bug-Busters-F/alfalog.git
+
 O objetivo deste projeto é desenvolver uma plataforma web que disponibilize informações sobre o
 desempenho dos Estados Brasileiros no comércio exterior, com base nos dados abertos do
 Ministério do Desenvolvimento, Indústria, Comércio e Serviços. Essa ferramenta fornecerá aos
