@@ -1,6 +1,7 @@
 import PieRemovedLines from "../components/PieRemovedLines"
 import BarRemovedLines from "../components/BarRemovedLines"
 import SidebarLayout from "../components/Sidebar"
+import { GlobalYearStateProvider } from "../context/GlobalYearStateContext";
 
 const data = [
     { value: 44, filter: 'Unidade de medida inválida' },
@@ -15,17 +16,19 @@ const data = [
 
 const ReportData = () => {
     return (
-        <SidebarLayout>
-            <h2 className="text-xl text-center font-bold mb-4">Linhas removidas</h2>
-            <div className="flex flex-col md:flex-row">
-                <div className="w-full md:w-1/2">
-                    <PieRemovedLines data={data} />
-                </div>
-                <div className="w-full md:w-1/2">
-                    <BarRemovedLines data={data} />
-                </div>
-            </div>
-        </SidebarLayout>
+        <GlobalYearStateProvider>
+                <SidebarLayout>
+                    <h2 className="text-xl text-center font-bold mb-4">Linhas removidas</h2>
+                    <div className="flex flex-col md:flex-row">
+                        <div className="w-full md:w-1/2">
+                            <PieRemovedLines data={data} />
+                        </div>
+                        <div className="w-full md:w-1/2">
+                            <BarRemovedLines data={data} />
+                        </div>
+                    </div>
+                </SidebarLayout>
+        </GlobalYearStateProvider>
     );
 };
 

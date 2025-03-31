@@ -1,6 +1,5 @@
 import React from "react";
 import Chart from "react-apexcharts";
-// import { data } from "react-router-dom";
 
 // Definindo a tipagem para as opções do gráfico
 interface ChartOptions {
@@ -77,15 +76,17 @@ const AreaChart: React.FC<AreaChartProps> = (props: AreaChartProps) => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Evolução do Preço Agregado</h2>
-      <Chart
-        options={options}
-        series={series}
-        type="area"
-        width="100%"
-        height={350}
-      />
+    <div className="p-5 bg-sky-900 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4 text-white">Evolução da Balança Comercial</h2>
+      <div className="shadow-md bg-gray-200 border-b border-sky-700 rounded-lg">
+        <Chart
+          options={options}
+          series={series}
+          type="area"
+          width="100%"
+          height={350}
+        />
+      </div>
     </div>
   );
 };
