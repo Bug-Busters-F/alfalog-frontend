@@ -43,12 +43,12 @@ export default function SidebarLayout({ children }: SideBarProps) {
         </center>
         <nav>
           <ul className="pt-2">
-            <a href="#">
+            <a href="/">
               <li className="mb-2 p-2 hover:bg-sky-800 rounded">
                 Dashboard
               </li>
             </a>
-            <a href="#">
+            <a href="/relatorios">
               <li className="mb-2 p-2 hover:bg-sky-800 rounded">
               Relatórios
               </li>
