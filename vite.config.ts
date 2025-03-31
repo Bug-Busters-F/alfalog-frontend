@@ -10,5 +10,6 @@ export default defineConfig({
       // Redireciona as requisições API para o servidor Flask
       '/api': 'http://127.0.0.1:5000',
     },
+
   },
 })
