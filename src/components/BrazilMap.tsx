@@ -63,9 +63,7 @@ const BrazilMapComponent: React.FC = () => {
 
   const toggleMapSize = () => {
     setIsMapMinimized(!isMapMinimized);
-    if (!isMapMinimized) {
-      setSelectedState(null);
-    }
+    setSelectedState(null);
   };
 
   const data = [
@@ -105,8 +103,8 @@ const BrazilMapComponent: React.FC = () => {
   }, [selectedState, selectedYear]);
 
   return (
-    <div className="flex flex-col w-full h-full p-2 md:p-4 lg:p-6">
-      <div className={`flex flex-col ${isMapMinimized ? "lg:flex-row" : ""} gap-4 w-full`}>
+    <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
+      <div className={`flex flex-col items-center ${isMapMinimized ? "lg:flex-row" : ""} gap-4 w-full`}>
         <div
           className={`relative transition-all duration-200 ${isMapMinimized ? "w-full sm:w-64 md:w-72 lg:w-80 h-auto cursor-default" : "w-full max-w-2xl mx-auto"}`}
           style={{ pointerEvents: isMapMinimized ? "none" : "auto" }}
