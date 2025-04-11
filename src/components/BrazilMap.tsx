@@ -104,33 +104,36 @@ const BrazilMapComponent: React.FC = () => {
 
   return (
     <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
+      <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-800 ">Escolher Estados</h1>
       <div className={`flex flex-col items-center ${isMapMinimized ? "lg:flex-row" : ""} gap-4 w-full`}>
         <div
           className={`relative transition-all duration-200 ${isMapMinimized ? "w-full sm:w-64 md:w-72 lg:w-80 h-auto cursor-default" : "w-full max-w-2xl mx-auto"}`}
           style={{ pointerEvents: isMapMinimized ? "none" : "auto" }}
         >
-          <Brazil
-            type="select-single"
-            size={isMapMinimized ? 300 : Math.min(window.innerWidth * 0.8, 600)}
-            mapColor="#B4DCFB"
-            strokeColor="#000"
-            strokeWidth={0.7}
-            hoverColor="oklch(0.685 0.169 237.323)"
-            selectColor="oklch(0.391 0.09 240.876)"
-            hints={true}
-            hintTextColor="white"
-            hintBackgroundColor="oklch(0.391 0.09 240.876)"
-            onSelect={handleSelect}
-          />
-          {isMapMinimized && (
-            <button
-              onClick={toggleMapSize}
-              className="mt-2 px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 mx-auto block"
-              style={{ pointerEvents: "auto" }}
-            >
-              Clique Para Escolher outro estado
-            </button>
-          )}
+          <div className="flex flex-col gap-6">
+            <Brazil
+              type="select-single"
+              size={isMapMinimized ? 300 : Math.min(window.innerWidth * 0.8, 600)}
+              mapColor="#B4DCFB"
+              strokeColor="#000"
+              strokeWidth={0.7}
+              hoverColor="oklch(0.685 0.169 237.323)"
+              selectColor="oklch(0.391 0.09 240.876)"
+              hints={true}
+              hintTextColor="white"
+              hintBackgroundColor="oklch(0.391 0.09 240.876)"
+              onSelect={handleSelect}
+            />
+            {isMapMinimized && (
+              <button
+                onClick={toggleMapSize}
+                className="bg-sky-900 hover:from-blue-700 hover:bg-sky-700 text-white font-semibold py-2  rounded-lg shadow-lg"
+                style={{ pointerEvents: "auto" }}
+              >
+                Clique Para Escolher outro estado
+              </button>
+            )}
+          </div>
         </div>
 
         {isMapMinimized && selectedState && (
