@@ -104,7 +104,7 @@ const BrazilMapComponent: React.FC = () => {
 
   return (
     <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
-      <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-800 ">Escolher Estados</h1>
+      <h1 className="text-4xl pb-4 font-extrabold leading-none tracking-tight text-gray-800 ">Escolher Estados</h1>
       <div className={`flex flex-col items-center ${isMapMinimized ? "lg:flex-row" : ""} gap-4 w-full`}>
         <div
           className={`relative transition-all duration-200 ${isMapMinimized ? "w-full sm:w-64 md:w-72 lg:w-80 h-auto cursor-default" : "w-full max-w-2xl mx-auto"}`}
