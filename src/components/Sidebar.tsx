@@ -39,11 +39,13 @@ export default function SidebarLayout({ children }: SideBarProps) {
           ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:relative`}
       >
         <center>
-          <img src={logo} alt="Logo da empresa" className="w-20 h-auto bg-amber-50 rounded-4xl" />
+          <a href="/">
+            <img src={logo} alt="Logo da empresa" className="w-20 h-auto bg-amber-50 rounded-4xl" />
+          </a>
         </center>
         <nav>
           <ul className="pt-2">
-            <a href="/">
+            <a href="/mapa">
               <li className="mb-2 p-2 hover:bg-sky-800 rounded">
                 Dashboard
               </li>
@@ -76,7 +78,7 @@ export default function SidebarLayout({ children }: SideBarProps) {
         </div>
 
         {/* Área de Conteúdo */}
-        <div className="p-6 bg-gray-100 flex-1 overflow-auto">{children}</div>
+        <div className="p-0 bg-gray-100 flex-1 overflow-auto">{children}</div>
       </div>
     </div>
   );
