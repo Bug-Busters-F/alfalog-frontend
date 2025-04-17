@@ -2,6 +2,7 @@ import Hamburger from "hamburger-react";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
 import YearForm from "./YearForm";
+import { FaGithub } from "react-icons/fa";
 
 interface SideBarProps {
   children?: ReactNode;
@@ -36,7 +37,7 @@ export default function SidebarLayout({ children }: SideBarProps) {
       <div
         ref={sidebarRef}
         className={`bg-sky-900 text-white w-64 p-4 fixed top-0 left-0 h-screen transform transition-transform duration-300 ease-in-out z-50
-          ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:relative`}
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:relative flex flex-col justify-between`}
       >
         <center>
           <a href="/">
@@ -62,9 +63,18 @@ export default function SidebarLayout({ children }: SideBarProps) {
             </a>
             <li>
               <YearForm/>
-            </li>
-          </ul>
-        </nav>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div className="mt-4">
+          <a href="https://github.com/Bug-Busters-F" target="_blank" rel="noopener noreferrer" 
+          className="flex items-center justify-center gap-2 p-2 hover:bg-sky-800 rounded text-sm text-center">
+            <FaGithub size={18} />
+            Repositório no GitHub
+          </a>
+        </div>
       </div>
 
       {/* Conteúdo Principal */}
