@@ -1,7 +1,8 @@
 import Hamburger from "hamburger-react";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
-import YearForm from "./YearForm";
+import ExportSwitch from "./ExportSwitch";
+
 
 interface SideBarProps {
   children?: ReactNode;
@@ -59,7 +60,7 @@ export default function SidebarLayout({ children }: SideBarProps) {
               </li>
             </a>
             <li>
-              <YearForm/>
+              <ExportSwitch/>
             </li>
           </ul>
         </nav>

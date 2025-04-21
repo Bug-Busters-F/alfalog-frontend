@@ -1,57 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Brazil from "@react-map/brazil";
 import AreaChart from "../components/AreaChart";
-import ExportValueAddedTable from "./ExportValueAddedTable";
-import TableOfMainExportCargoes from "./TableOfMainExportCargoes";
 import { useGlobalState } from "../context/GlobalYearStateContext";
 import { getFormattedDataForAddedValuesTable } from "../util/formattedData";
-import { getFormattedDataForMovedCargo } from "../util/formattedData";
+import YearForm from "./YearForm";
+import TransactionTable from "./TransactionTable";
+import { BarChart } from "./PathBarChart";
+import { useExport } from "../context/ExportContext";
 
 const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [chartKey, setChartKey] = useState(0);
   const [isMapMinimized, setIsMapMinimized] = useState(false);
   const [formattedData, setFormattedData] = useState<any[]>([]);
-  const [movedCargoData, setMovedCargoData] = useState<any[]>([]);
+  const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
 
   const { selectedYear } = useGlobalState();
+  const stateIds = JSON.parse(localStorage.getItem("UFs") || '{}');
 
-  const stateIds: { [key: string]: number } = {
-    "Acre": 1,
-    "Amazonas": 2,
-    "Roraima": 3,
-    "Pará": 4,
-    "Amapá": 5,
-    "Tocantins": 6,
-    "Maranhão": 7,
-    "Piauí": 8,
-    "Ceará": 9,
-    "Rio Grande do Norte": 10,
-    "Paraíba": 11,
-    "Pernambuco": 12,
-    "Alagoas": 13,
-    "Sergipe": 14,
-    "Bahia": 15,
-    "Minas Gerais": 16,
-    "Espírito Santo": 17,
-    "Rio de Janeiro": 18,
-    "São Paulo": 19,
-    "Paraná": 20,
-    "Santa Catarina": 21,
-    "Rio Grande do Sul": 22,
-    "Mato Grosso": 23,
-    "Goiás": 24,
-    "Distrito Federal": 25,
-    "Mato Grosso do Sul": 26,
-    "Exterior": 27,
-    "Consumo de Bordo": 28,
-    "Mercadoria Nacionalizada": 29,
-    "Reexportação": 30,
-    "Estados Diversos - Café": 31,
-    "Não Declarada": 32,
-    "Zona Não Declarada": 33,
-    "Rondônia": 34,
-  };
+  const { isExport } = useExport();
 
   const handleSelect = (state: string | null) => {
     if (state && !isMapMinimized) {
@@ -66,21 +33,17 @@ const BrazilMapComponent: React.FC = () => {
     setSelectedState(null);
   };
 
-  const data = [
-    { year: 123, value: 21 },
-    { year: 124, value: 30 },
-    { year: 125, value: 50 },
-    { year: 126, value: 10 },
-  ];
+  const handleFilterChange = (type: 'valor' | 'peso') => {
+    console.log('Filtro selecionado:', type);
+  };
 
   useEffect(() => {
     if (selectedState) {
       const stateId = stateIds[selectedState] || -1;
-      const year = Number(selectedYear); 
-  
+      const year = Number(selectedYear);
+
       console.log(`ID do estado ${selectedState}: ${stateId} Ano: ${year}`);
-    
-      
+
       getFormattedDataForAddedValuesTable(stateId, year)
         .then((data) => {
           console.log(data)
@@ -89,18 +52,47 @@ const BrazilMapComponent: React.FC = () => {
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
-
-      
-      getFormattedDataForMovedCargo(stateId, year)
-        .then((cargoData) => {
-          console.log(cargoData)
-          setMovedCargoData(cargoData);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar os dados de carga movimentada:", error);
-        });
     }
   }, [selectedState, selectedYear]);
+
+  useEffect(()=>{
+    console.log("Modo atual:", isExport ? "Exportação" : "Importação");
+  },[isExport])
+
+  const data = [
+    { year: 123, value: 21 },
+    { year: 124, value: 30 },
+    { year: 125, value: 50 },
+    { year: 126, value: 10 },
+  ];
+
+  const dataTest = [
+    { ncm: "01012100", nome: "Cavalo puro-sangue para reprodução", pais: "Argentina", via: "Marítima", valor: 250000, peso: 500 },
+    { ncm: "02071400", nome: "Cortes de frango congelados", pais: "China", via: "Aérea", valor: 54000, peso: 1200 },
+    { ncm: "10063021", nome: "Arroz com casca polido", pais: "Japão", via: "Marítima", valor: 78000, peso: 2000 },
+    // Mais dados...
+  ];
+
+  const dataTest2 = [
+    { name: "VIA NAO DECLARADA", value: 120 },
+    { name: "MARITIMA", value: 450 },
+    { name: "FLUVIAL", value: 320 },
+    { name: "LACUSTRE", value: 150 },
+    { name: "AEREA", value: 780 },
+    { name: "POSTAL", value: 210 },
+    { name: "FERROVIARIA", value: 600 },
+    // Mais dados...
+  ];
+
+  const dataTest3 = [
+    { name: "URF1", value: 220 },
+    { name: "URF2", value: 350 },
+    { name: "URF3", value: 120 },
+    { name: "UFR4", value: 50 },
+    { name: "URF5", value: 580 },
+    { name: "URF6", value: 110 },
+    // Mais dados...
+  ];
 
   return (
     <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
@@ -111,6 +103,7 @@ const BrazilMapComponent: React.FC = () => {
           style={{ pointerEvents: isMapMinimized ? "none" : "auto" }}
         >
           <div className="flex flex-col gap-6">
+            <YearForm />
             <Brazil
               type="select-single"
               size={isMapMinimized ? 300 : Math.min(window.innerWidth * 0.8, 600)}
@@ -130,49 +123,84 @@ const BrazilMapComponent: React.FC = () => {
                 className="bg-sky-900 hover:from-blue-700 hover:bg-sky-700 text-white font-semibold py-2  rounded-lg shadow-lg"
                 style={{ pointerEvents: "auto" }}
               >
-                Clique Para Escolher outro estado
+                Clique Para Escolher outro estado ou ano
               </button>
             )}
           </div>
         </div>
 
         {isMapMinimized && selectedState && (
-          <div className="flex-1 min-w-0 ">
-            <h3 className="text-lg font-semibold mb-2">Dados do estado: {selectedState}</h3>
-            <div className="h-114 w-full">
-              <AreaChart data={data} />
+          <div className="flex flex-col w-full gap-4">
+            <h3 className="text-xl font-bold text-gray-800">
+              Dados do estado: {selectedState}
+            </h3>
+
+            <div className="w-full overflow-x-auto">
+              {selectedState && formattedData.length >= 0 && (
+                <div key={`tables-${chartKey}`} className="w-full">
+                  <div className="inline-flex rounded-lg overflow-hidden border border-gray-300 mb-4">
+                    <button
+                      onClick={() => setShowTransactionTable(1)}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
+                        showTransactionTable === 1
+                          ? "bg-sky-900 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      Tabela de Transações
+                    </button>
+                    <button
+                      onClick={() => setShowTransactionTable(2)}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
+                        showTransactionTable === 2
+                          ? "bg-sky-900 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      Gráfico de Vias
+                    </button>
+                    <button
+                      onClick={() => setShowTransactionTable(3)}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
+                        showTransactionTable === 3
+                          ? "bg-sky-900 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      Gráfico de URFs
+                    </button>
+                    <button
+                      onClick={() => setShowTransactionTable(4)}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
+                        showTransactionTable === 4
+                          ? "bg-sky-900 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      Balança Comercial
+                    </button>
+                  </div>
+
+
+                  <div className="w-full overflow-x-auto">
+                    {showTransactionTable === 1 ? (
+                      <TransactionTable data={dataTest} onFilterChange={handleFilterChange}/>
+                    ) : showTransactionTable === 2 ? (
+                      <BarChart data={dataTest2} />
+                    ) : showTransactionTable === 3 ?(
+                      <BarChart data={dataTest3} />
+                    ):(
+                      <AreaChart data={data}/>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      <div className={`${isMapMinimized ? "mt-4" : "mt-6"} w-full`}>
-        {selectedState && !isMapMinimized && (
-          <div key={chartKey} className="w-full mb-6 p-4  ">
-            <h3 className="text-xl font-bold mb-4">Dados do estado: {selectedState}</h3>
-            <div className="h-114 w-full">
-              <AreaChart data={data} />
-            </div>
-          </div>
-        )}
-
-        {selectedState && formattedData.length > 0 && (
-          <div key={`tables-${chartKey}`} className="w-full">
-            <div className="flex flex-col lg:flex-row gap-4 w-full pt-4">
-              <div className="w-full lg:w-1/2">
-                <div className="rounded-lg h-full shadow">
-                  <ExportValueAddedTable data={formattedData} />
-                </div>
-              </div>
-              <div className="w-full lg:w-1/2">
-                <div className="rounded-lg h-full">
-                  <TableOfMainExportCargoes data={movedCargoData} />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <div className={`${isMapMinimized ? "mt-4" : "mt-6"} w-full`}></div>
     </div>
   );
 };
