@@ -39,38 +39,44 @@ export default function SidebarLayout({ children }: SideBarProps) {
         className={`bg-sky-900 text-white w-64 p-4 fixed top-0 left-0 h-screen transform transition-transform duration-300 ease-in-out z-50
           ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:relative flex flex-col justify-between`}
       >
-        <center>
-          <a href="/">
-            <img src={logo} alt="Logo da empresa" className="w-20 h-auto bg-amber-50 rounded-4xl" />
-          </a>
-        </center>
-        <nav>
-          <ul className="pt-2">
-            <a href="/mapa">
-              <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-                Dashboard
-              </li>
+        <div>
+          <center>
+            <a href="/">
+              <img src={logo} alt="Logo da empresa" className="w-20 h-auto bg-amber-50 rounded-4xl" />
             </a>
-            <a href="/relatorios">
-              <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-              Relatórios
-              </li>
-            </a>
-            <a href="#">
-              <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-                Alguma outra coisa
-              </li>
-            </a>
-            <li>
-              <YearForm/>
+          </center>
+          <nav>
+            <ul className="pt-2">
+              <a href="/">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Página inicial
+                </li>
+              </a>
+              <a href="/mapa">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Dashboard
+                </li>
+              </a>
+              <a href="/relatorios">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Relatórios
+                </li>
+              </a>
+              <a href="#">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Alguma outra coisa
+                </li>
+              </a>
+              <li>
+                <YearForm />
               </li>
             </ul>
           </nav>
         </div>
 
         <div className="mt-4">
-          <a href="https://github.com/Bug-Busters-F" target="_blank" rel="noopener noreferrer" 
-          className="flex items-center justify-center gap-2 p-2 hover:bg-sky-800 rounded text-sm text-center">
+          <a href="https://github.com/Bug-Busters-F" target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 p-2 hover:bg-sky-800 rounded text-sm text-center">
             <FaGithub size={18} />
             Repositório no GitHub
           </a>
