@@ -62,11 +62,6 @@ export default function SidebarLayout({ children }: SideBarProps) {
                   Relatórios
                 </li>
               </a>
-              <a href="#">
-                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
-                  Alguma outra coisa
-                </li>
-              </a>
               <li>
                 <YearForm />
               </li>
