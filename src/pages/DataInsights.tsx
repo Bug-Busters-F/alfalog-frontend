@@ -3,15 +3,17 @@ import SidebarLayout from "../components/Sidebar"
 import { GlobalYearStateProvider } from "../context/GlobalYearStateContext"
 
 const sampleData = [
-    { label: 'Unid. medida inválida', removedCount: 150 },
-    { label: 'País não reconhecido', removedCount: 95 },
-    { label: 'UF ausente', removedCount: 30 },
-    { label: 'Via transp. inválida', removedCount: 70 },
-    { label: 'URF não identificada', removedCount: 30 },
-    { label: 'Qtd. estatística zerada', removedCount: 30 },
-    { label: 'Peso líquido zerado', removedCount: 30 },
-    { label: 'Valor FOB zerado', removedCount: 30 }
-  ]
+  { label: 'Unid. medida inválida', removedCount: 47 },
+  { label: 'País não reconhecido', removedCount: 7788 },
+  { label: 'UF ausente ou inválida', removedCount: 604335 },
+  { label: 'Via transp. inválida', removedCount: 187036 },
+  { label: 'Vias terr. inconsistentes', removedCount: 278700 },
+  { label: 'Qtd. estatística zerada', removedCount: 681564 },
+  { label: 'Valor FOB zerado', removedCount: 11082 },
+  { label: 'NCMs pouco frequentes', removedCount: 45053 },
+  { label: 'Países pouco frequentes', removedCount: 904 },
+  { label: 'Outliers', removedCount: 2531070 }
+]
 
 const DataInsights = () => {
     return(
