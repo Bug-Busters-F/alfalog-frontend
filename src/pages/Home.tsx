@@ -1,6 +1,5 @@
 import SidebarLayout from "../components/Sidebar";
 import { GlobalYearStateProvider } from "../context/GlobalYearStateContext";
-import ComparationStates from "../components/ComparationStates";
 import br from "/public/br.png"
 
 
