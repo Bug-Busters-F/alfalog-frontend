@@ -2,6 +2,7 @@ import SidebarLayout from "../components/Sidebar";
 import { GlobalYearStateProvider } from "../context/GlobalYearStateContext";
 import br from "/public/br.png"
 
+
 const Home = () => {
   return (
     <div className="flex flex-col h-full">
