@@ -1,8 +1,8 @@
 import Hamburger from "hamburger-react";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
-import YearForm from "./YearForm";
 import { FaGithub } from "react-icons/fa";
+import DownloadButton from "./downloadButton";
 
 interface SideBarProps {
   children?: ReactNode;
@@ -62,9 +62,9 @@ export default function SidebarLayout({ children }: SideBarProps) {
                   Relatórios
                 </li>
               </a>
-              <li>
-                <YearForm />
-              </li>
+                <li>
+                  <DownloadButton/>
+                </li>
             </ul>
           </nav>
         </div>
