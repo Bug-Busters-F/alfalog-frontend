@@ -12,9 +12,9 @@ export const mostUsedUFRS = async (isExport: boolean, uf_id: number, year: numbe
 
   try {
     const response = await axios.post(url, { uf_id, ano: year });
-    return response.data; // Assuming the response data is the list of trade data
+    return response.data;
   } catch (error) {
-    console.error(`Error fetching trade data from ${url}:`, error);
-    return []; // Return empty array if there's an error
+    console.error(`Erro ao buscar as URFs mais utilizadas em ${url}:`, error);
+    return [];
   }
 };

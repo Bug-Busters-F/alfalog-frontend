@@ -52,7 +52,6 @@ const BrazilMapComponent: React.FC = () => {
 
       getFormattedDataForAddedValuesTable(stateId, year)
         .then((data) => {
-          console.log(data)
           setFormattedData(data);
         })
         .catch((error) => {
@@ -61,7 +60,6 @@ const BrazilMapComponent: React.FC = () => {
 
       processTopUrfs(stateId,year,isExport)
         .then((data) => {
-          console.log(data)
           setMostUsedURFSData(data)
         })
         .catch((error) => {
@@ -70,7 +68,6 @@ const BrazilMapComponent: React.FC = () => {
 
         processTopRoutes(stateId,year,isExport)
         .then((data) => {
-          console.log(data)
           setMostUsedRoutesData(data)
         })
         .catch((error) => {
@@ -79,7 +76,6 @@ const BrazilMapComponent: React.FC = () => {
 
         tradeBalance(stateId)
         .then((data) => {
-          console.log(data)
           setTradeBalanceData(data)
         })
         .catch((error) => {

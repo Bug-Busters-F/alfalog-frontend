@@ -14,7 +14,7 @@ export const mostUsedRoutes = async (isExport: boolean, uf_id: number, year: num
     const response = await axios.post(url, { uf_id, ano: year });
     return response.data; 
   } catch (error) {
-    console.error(`Error fetching trade data from ${url}:`, error);
+    console.error(`Erro ao buscar as rotas mais utilizadas em ${url}:`, error);
     return [];
   }
 };

@@ -5,9 +5,9 @@ export const getUrfById = async (urf_id: number) => {
   
     try {
       const response = await axios.get(url);
-      return response.data.data; // Extract the 'data' part from the response
+      return response.data.data;
     } catch (error) {
-      console.error(`Error fetching URF data for ID ${urf_id}:`, error);
-      return null; // Return null if there's an error
+      console.error(`Erro ao buscar urf com id ${urf_id}:`, error);
+      return null;
     }
   };

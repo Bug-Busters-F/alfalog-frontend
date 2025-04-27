@@ -20,7 +20,7 @@ export const tradeBalance = async (uf_id: number): Promise<Result[]> => {
     }));
 
   } catch (error) {
-    console.error(`Error fetching trade data from api/balanca-comercial:`, error);
+    console.error(`Erro ao buscar a balança comercial:`, error);
     return [];
   }
 };

@@ -26,7 +26,7 @@ export const processTopUrfs = async (uf_id: number, year: number, isExport: bool
 
     return topTradeData;
   } catch (error) {
-    console.error('Error processing top URFs:', error);
+    console.error('Erro ao processar as tops URFs:', error);
     return [];
   }
 };
