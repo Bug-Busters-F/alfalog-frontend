@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { getFormattedDataForAddedValuesTable } from '../util/formattedData';
 
-interface Data {
-  ncm: string;
+interface FormattedData {
+  ncm: number;
   nome: string;
   pais: string;
   via: string;
@@ -9,118 +10,131 @@ interface Data {
   peso: number;
 }
 
-interface TransactionTableProps {
-  data: Data[];
-  onFilterChange: (filterType: 'valor' | 'peso') => void;
+interface PaginatedTableProps {
+  isExport: boolean;
+  uf_id: number;
+  ano: number;
 }
 
-const PAGE_SIZE = 5;
+const PaginatedTable: React.FC<PaginatedTableProps> = ({
+  isExport,
+  uf_id,
+  ano
+}) => {
+  const [formattedData, setFormattedData] = useState<FormattedData[]>([]);
+  const [hasNext, setHasNext] = useState<boolean>(false);
+  const [hasPrevious, setHasPrevious] = useState<boolean>(false);
+  const [pagina, setPagina] = useState<number>(0);
+  const [cursor, setCursor] = useState<number>(1);
+  const [sortOption, setSortOption] = useState<'valor' | 'peso'>('valor');
 
-export default function TransactionTable({
-  data,
-  onFilterChange,
-}: TransactionTableProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filterType, setFilterType] = useState<'valor' | 'peso'>('valor');
+  const fetchFormattedData = async () => {
+    try {
+      const response = await getFormattedDataForAddedValuesTable(
+        isExport,
+        uf_id,
+        ano,
+        sortOption,
+        cursor
+      );
+      setFormattedData(response.formattedData);
+      setHasNext(response.has_next);
+      setHasPrevious(response.has_previous);
+      setPagina(response.pagina);
+    } catch (error) {
+      console.error('Erro ao buscar os dados:', error);
+    }
+  };
 
-  const totalPages = Math.ceil(data.length / PAGE_SIZE);
-  const currentData = data.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
-  );
+  useEffect(() => {
+    fetchFormattedData();
+  }, [isExport, uf_id, ano, sortOption, cursor]);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value as 'valor' | 'peso';
-    setFilterType(value);
-    onFilterChange(value);
-    setCurrentPage(1); // Resetar para a primeira página ao mudar o filtro
+  const handlePrevious = () => {
+    if (cursor > 1) setCursor(cursor - 1);
+  };
+
+  const handleNext = () => {
+    if (hasNext) setCursor(cursor + 1);
   };
 
   return (
-    <div className="p-4 w-full max-w-4xl mx-auto bg-sky-900 text-white rounded-lg shadow-lg">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-        <h2 className="text-xl font-bold">Transações</h2>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <label htmlFor="filter" className="whitespace-nowrap">Filtrar por:</label>
-          <select
-            id="filter"
-            value={filterType}
-            onChange={handleFilterChange}
-            className="bg-sky-700 text-white px-3 py-2 rounded w-full sm:w-auto"
-          >
-            <option value="valor">Valor (R$)</option>
-            <option value="peso">Peso (Kg)</option>
-          </select>
-        </div>
+    <div className="bg-white p-6 rounded-lg shadow">
+      {/* Filtro */}
+      <div className="flex items-center mb-4">
+        <label htmlFor="sortOption" className="font-semibold mr-2">
+          Organizar por:
+        </label>
+        <select
+          id="sortOption"
+          value={sortOption}
+          onChange={e => setSortOption(e.target.value as 'valor' | 'peso')}
+          className="px-3 py-2 border border-gray-300 rounded focus:outline-none"
+        >
+          <option value="valor">Valor Agregado</option>
+          <option value="peso">Peso</option>
+        </select>
       </div>
-      
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-200">
-          <thead className="text-xs uppercase bg-sky-500 text-white">
-            <tr>
-              <th scope="col" className="px-4 py-3 w-24">NCM</th>
-              <th scope="col" className="px-4 py-3 min-w-[120px]">Nome</th>
-              <th scope="col" className="px-4 py-3 w-32">País</th>
-              <th scope="col" className="px-4 py-3 w-24">Via</th>
-              <th scope="col" className="px-4 py-3 w-32 text-right">Valor Agregado(R$)</th>
-              <th scope="col" className="px-4 py-3 w-32 text-right">Peso (Kg)</th>
+
+      {/* Tabela */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse">
+          <thead>
+            <tr className="bg-sky-900 text-white">
+              <th className="px-4 py-3 text-left">NCM</th>
+              <th className="px-4 py-3 text-left">Nome</th>
+              <th className="px-4 py-3 text-left">País</th>
+              <th className="px-4 py-3 text-left">Via</th>
+              <th className="px-4 py-3 text-left">Valor Agregado</th>
+              <th className="px-4 py-3 text-left">Peso (Kg)</th>
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item, index) => (
+            {formattedData.map((row, i) => (
               <tr
-                key={`${item.ncm}-${index}`}
-                className="bg-gray-200 border-b border-sky-700 hover:bg-gray-300"
+                key={i}
+                className={i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'}
               >
-                <th scope="row" className="px-4 py-4 font-medium text-black whitespace-nowrap">
-                  {item.ncm}
-                </th>
-                <td className="px-4 py-4 text-black whitespace-nowrap">
-                  {item.nome}
-                </td>
-                <td className="px-4 py-4 text-black whitespace-nowrap">
-                  {item.pais}
-                </td>
-                <td className="px-4 py-4 text-black whitespace-nowrap">
-                  {item.via}
-                </td>
-                <td className="px-4 py-4 text-black text-right whitespace-nowrap">
-                  {item.valor.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                  })}
-                </td>
-                <td className="px-4 py-4 text-black text-right whitespace-nowrap">
-                  {item.peso.toLocaleString('pt-BR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
-                </td>
+                <td className="px-4 py-2">{row.ncm}</td>
+                <td className="px-4 py-2">{row.nome}</td>
+                <td className="px-4 py-2">{row.pais}</td>
+                <td className="px-4 py-2">{row.via}</td>
+                <td className="px-4 py-2">{row.valor}</td>
+                <td className="px-4 py-2">{row.peso}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4">
+      {/* Paginação */}
+      <div className="mt-4 flex justify-between items-center">
         <button
-          className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50 w-full sm:w-auto"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
+          onClick={handlePrevious}
+          disabled={!hasPrevious}
+          className={`px-4 py-2 rounded ${
+            hasPrevious
+              ? 'bg-sky-900 text-white hover:bg-sky-800'
+              : 'bg-gray-100 text-gray-700'
+          }`}
         >
-          Voltar
+          Anterior
         </button>
-        <span className="text-center">
-          Página {currentPage} de {totalPages}
-        </span>
+        <span className="font-medium">{`Página ${pagina}`}</span>
         <button
-          className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50 w-full sm:w-auto"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages || totalPages === 0}
+          onClick={handleNext}
+          disabled={!hasNext}
+          className={`px-4 py-2 rounded ${
+            hasNext
+              ? 'bg-sky-900 text-white hover:bg-sky-800'
+              : 'bg-gray-100 text-gray-700'
+          }`}
         >
-          Avançar
+          Próxima
         </button>
       </div>
     </div>
   );
-}
+};
+
+export default PaginatedTable;
