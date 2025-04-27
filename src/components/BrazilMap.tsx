@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Brazil from "@react-map/brazil";
 import AreaChart from "../components/AreaChart";
 import { useGlobalState } from "../context/GlobalYearStateContext";
-import { getFormattedDataForAddedValuesTable } from "../util/formattedData";
 import YearForm from "./YearForm";
 import TransactionTable from "./TransactionTable";
 import { BarChart } from "./PathBarChart";
@@ -15,15 +14,13 @@ const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [chartKey, setChartKey] = useState(0);
   const [isMapMinimized, setIsMapMinimized] = useState(false);
-  const [formattedData, setFormattedData] = useState<any[]>([]);
-  const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([])
-  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any []>([])
-  const [tradeBalanceData, setTradeBalanceData] = useState<any []>([])
+  const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([]);
+  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any []>([]);
+  const [tradeBalanceData, setTradeBalanceData] = useState<any []>([]);
   const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
 
   const { selectedYear } = useGlobalState();
   const stateIds = JSON.parse(localStorage.getItem("UFs") || '{}');
-
   const { isExport } = useExport();
 
   const handleSelect = (state: string | null) => {
@@ -39,10 +36,6 @@ const BrazilMapComponent: React.FC = () => {
     setSelectedState(null);
   };
 
-  const handleFilterChange = (type: 'valor' | 'peso') => {
-    console.log('Filtro selecionado:', type);
-  };
-
   useEffect(() => {
     if (selectedState) {
       const stateId = stateIds[selectedState] || -1;
@@ -50,52 +43,32 @@ const BrazilMapComponent: React.FC = () => {
 
       console.log(`ID do estado ${selectedState}: ${stateId} Ano: ${year}`);
 
-      getFormattedDataForAddedValuesTable(stateId, year)
+      processTopUrfs(stateId, year, isExport)
         .then((data) => {
-          setFormattedData(data);
+          setMostUsedURFSData(data);
         })
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
 
-      processTopUrfs(stateId,year,isExport)
+      processTopRoutes(stateId, year, isExport)
         .then((data) => {
-          setMostUsedURFSData(data)
+          setMostUsedRoutesData(data);
         })
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
 
-        processTopRoutes(stateId,year,isExport)
+      tradeBalance(stateId)
         .then((data) => {
-          setMostUsedRoutesData(data)
+          setTradeBalanceData(data);
         })
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
-
-        tradeBalance(stateId)
-        .then((data) => {
-          setTradeBalanceData(data)
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar os dados:", error);
-        });
-
-
     }
     console.log("Modo atual:", isExport ? "Exportação" : "Importação");
-  }, [selectedState, selectedYear,isExport]);
-
-
-
-  const dataTest = [
-    { ncm: "01012100", nome: "Cavalo puro-sangue para reprodução", pais: "Argentina", via: "Marítima", valor: 250000, peso: 500 },
-    { ncm: "02071400", nome: "Cortes de frango congelados", pais: "China", via: "Aérea", valor: 54000, peso: 1200 },
-    { ncm: "10063021", nome: "Arroz com casca polido", pais: "Japão", via: "Marítima", valor: 78000, peso: 2000 },
-    // Mais dados...
-  ];
-
+  }, [selectedState, selectedYear, isExport]);
 
   return (
     <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
@@ -123,7 +96,7 @@ const BrazilMapComponent: React.FC = () => {
             {isMapMinimized && (
               <button
                 onClick={toggleMapSize}
-                className="bg-sky-900 hover:from-blue-700 hover:bg-sky-700 text-white font-semibold py-2  rounded-lg shadow-lg"
+                className="bg-sky-900 hover:from-blue-700 hover:bg-sky-700 text-white font-semibold py-2 rounded-lg shadow-lg"
                 style={{ pointerEvents: "auto" }}
               >
                 Clique Para Escolher outro estado ou ano
@@ -139,61 +112,44 @@ const BrazilMapComponent: React.FC = () => {
             </h3>
 
             <div className="w-full overflow-x-auto">
-              {selectedState && formattedData.length >= 0 && (
+              {selectedState && (
                 <div key={`tables-${chartKey}`} className="w-full">
                   <div className="inline-flex rounded-lg overflow-hidden border border-gray-300 mb-4">
                     <button
                       onClick={() => setShowTransactionTable(1)}
-                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
-                        showTransactionTable === 1
-                          ? "bg-sky-900 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${showTransactionTable === 1 ? "bg-sky-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                     >
                       Tabela de Transações
                     </button>
                     <button
                       onClick={() => setShowTransactionTable(2)}
-                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
-                        showTransactionTable === 2
-                          ? "bg-sky-900 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${showTransactionTable === 2 ? "bg-sky-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                     >
                       Gráfico de Vias
                     </button>
                     <button
                       onClick={() => setShowTransactionTable(3)}
-                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
-                        showTransactionTable === 3
-                          ? "bg-sky-900 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${showTransactionTable === 3 ? "bg-sky-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                     >
                       Gráfico de URFs
                     </button>
                     <button
                       onClick={() => setShowTransactionTable(4)}
-                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
-                        showTransactionTable === 4
-                          ? "bg-sky-900 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
+                      className={`px-4 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${showTransactionTable === 4 ? "bg-sky-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                     >
                       Balança Comercial
                     </button>
                   </div>
 
-
                   <div className="w-full overflow-x-auto">
                     {showTransactionTable === 1 ? (
-                      <TransactionTable data={dataTest} onFilterChange={handleFilterChange}/>
+                      <TransactionTable isExport={isExport} uf_id={stateIds[selectedState] || -1} ano={Number(selectedYear)} />
                     ) : showTransactionTable === 2 ? (
                       <BarChart data={mostUsedRoutesData} />
-                    ) : showTransactionTable === 3 ?(
+                    ) : showTransactionTable === 3 ? (
                       <BarChart data={mostUsedURFSData} />
-                    ):(
-                      <AreaChart data={tradeBalanceData}/>
+                    ) : (
+                      <AreaChart data={tradeBalanceData} />
                     )}
                   </div>
                 </div>
