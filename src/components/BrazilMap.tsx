@@ -9,6 +9,7 @@ import { BarChart } from "./PathBarChart";
 import { useExport } from "../context/ExportContext";
 import { processTopUrfs } from "../util/processTopURFs";
 import { processTopRoutes } from "../util/processTopRoutes";
+import { tradeBalance } from "../api/service/tradeBalance";
 
 const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
@@ -17,6 +18,7 @@ const BrazilMapComponent: React.FC = () => {
   const [formattedData, setFormattedData] = useState<any[]>([]);
   const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([])
   const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any []>([])
+  const [tradeBalanceData, setTradeBalanceData] = useState<any []>([])
   const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
 
   const { selectedYear } = useGlobalState();
@@ -75,17 +77,21 @@ const BrazilMapComponent: React.FC = () => {
           console.error("Erro ao buscar os dados:", error);
         });
 
+        tradeBalance(stateId)
+        .then((data) => {
+          console.log(data)
+          setTradeBalanceData(data)
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar os dados:", error);
+        });
+
+
     }
     console.log("Modo atual:", isExport ? "Exportação" : "Importação");
   }, [selectedState, selectedYear,isExport]);
 
 
-  const data = [
-    { year: 123, value: 21 },
-    { year: 124, value: 30 },
-    { year: 125, value: 50 },
-    { year: 126, value: 10 },
-  ];
 
   const dataTest = [
     { ncm: "01012100", nome: "Cavalo puro-sangue para reprodução", pais: "Argentina", via: "Marítima", valor: 250000, peso: 500 },
@@ -191,7 +197,7 @@ const BrazilMapComponent: React.FC = () => {
                     ) : showTransactionTable === 3 ?(
                       <BarChart data={mostUsedURFSData} />
                     ):(
-                      <AreaChart data={data}/>
+                      <AreaChart data={tradeBalanceData}/>
                     )}
                   </div>
                 </div>
