@@ -7,12 +7,14 @@ import YearForm from "./YearForm";
 import TransactionTable from "./TransactionTable";
 import { BarChart } from "./PathBarChart";
 import { useExport } from "../context/ExportContext";
+import { processTopUrfs } from "../util/processTopURFs";
 
 const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [chartKey, setChartKey] = useState(0);
   const [isMapMinimized, setIsMapMinimized] = useState(false);
   const [formattedData, setFormattedData] = useState<any[]>([]);
+  const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([])
   const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
 
   const { selectedYear } = useGlobalState();
@@ -52,12 +54,20 @@ const BrazilMapComponent: React.FC = () => {
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
-    }
-  }, [selectedState, selectedYear]);
 
-  useEffect(()=>{
+      processTopUrfs(stateId,year,isExport)
+        .then((data) => {
+          console.log(data)
+          setMostUsedURFSData(data)
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar os dados:", error);
+        });
+
+    }
     console.log("Modo atual:", isExport ? "Exportação" : "Importação");
-  },[isExport])
+  }, [selectedState, selectedYear,isExport]);
+
 
   const data = [
     { year: 123, value: 21 },
@@ -84,15 +94,6 @@ const BrazilMapComponent: React.FC = () => {
     // Mais dados...
   ];
 
-  const dataTest3 = [
-    { name: "URF1", value: 220 },
-    { name: "URF2", value: 350 },
-    { name: "URF3", value: 120 },
-    { name: "UFR4", value: 50 },
-    { name: "URF5", value: 580 },
-    { name: "URF6", value: 110 },
-    // Mais dados...
-  ];
 
   return (
     <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
@@ -188,7 +189,7 @@ const BrazilMapComponent: React.FC = () => {
                     ) : showTransactionTable === 2 ? (
                       <BarChart data={dataTest2} />
                     ) : showTransactionTable === 3 ?(
-                      <BarChart data={dataTest3} />
+                      <BarChart data={mostUsedURFSData} />
                     ):(
                       <AreaChart data={data}/>
                     )}
