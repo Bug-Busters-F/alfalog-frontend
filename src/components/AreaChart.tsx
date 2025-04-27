@@ -1,7 +1,6 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-// Definindo a tipagem para as opções do gráfico
 interface ChartOptions {
   chart: {
     id: string;
@@ -24,53 +23,68 @@ interface ChartOptions {
       stops: number[];
     };
   };
+  markers?: {
+    size: number;
+  };
+  yaxis: {
+    opposite: boolean;
+    labels: {
+      formatter: (value: number) => string;
+    };
+  };
 }
 
-// Definindo a tipagem para os dados do gráfico
 interface ChartSeries {
   name: string;
   data: number[];
 }
 
-interface Data{
-    value: number
-    year: number
+interface Data {
+  value: number;
+  year: number;
 }
 
-interface AreaChartProps{
-    data: Data[]
+interface AreaChartProps {
+  data: Data[];
 }
 
 const AreaChart: React.FC<AreaChartProps> = (props: AreaChartProps) => {
-  // Dados do gráfico
   const series: ChartSeries[] = [
     {
-      name: "Preço Agregado",
-      data: props.data.map((item)=>item.value),
+      name: "Balança Comercial",
+      data: props.data.map((item) => item.value),
     },
   ];
 
-  // Opções do gráfico
   const options: ChartOptions = {
     chart: {
       id: "area-chart",
       toolbar: {
-        show: true, // Mostra a barra de ferramentas (zoom, exportação, etc.)
+        show: true,
       },
     },
     xaxis: {
-      categories: props.data.map((item=>item.year.toString())), // Categorias do eixo X
+      categories: props.data.map((item) => item.year.toString()),
     },
     stroke: {
-      curve: "smooth", // Linha suavizada
+      curve: "smooth",
     },
     fill: {
-      type: "gradient", // Preenchimento com gradiente
+      type: "gradient",
       gradient: {
         shadeIntensity: 1,
         opacityFrom: 0.7,
         opacityTo: 0.9,
         stops: [0, 100],
+      },
+    },
+    markers: {
+      size: 5,
+    },
+    yaxis: {
+      opposite: true,
+      labels: {
+        formatter: (value) => `${value < 0 ? "" : "+"}${value}`,
       },
     },
   };

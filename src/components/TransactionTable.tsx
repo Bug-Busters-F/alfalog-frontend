@@ -6,18 +6,22 @@ interface Data {
   pais: string;
   via: string;
   valor: number;
+  peso: number;
 }
 
-interface ExportValueAddedTableProps {
+interface TransactionTableProps {
   data: Data[];
+  onFilterChange: (filterType: 'valor' | 'peso') => void;
 }
 
 const PAGE_SIZE = 5;
 
-export default function ExportValueAddedTable({
+export default function TransactionTable({
   data,
-}: ExportValueAddedTableProps) {
+  onFilterChange,
+}: TransactionTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterType, setFilterType] = useState<'valor' | 'peso'>('valor');
 
   const totalPages = Math.ceil(data.length / PAGE_SIZE);
   const currentData = data.slice(
@@ -25,11 +29,31 @@ export default function ExportValueAddedTable({
     currentPage * PAGE_SIZE
   );
 
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value as 'valor' | 'peso';
+    setFilterType(value);
+    onFilterChange(value);
+    setCurrentPage(1); // Resetar para a primeira página ao mudar o filtro
+  };
+
   return (
     <div className="p-4 w-full max-w-4xl mx-auto bg-sky-900 text-white rounded-lg shadow-lg">
-      <h2 className="text-center text-xl font-bold mb-4">
-        Valor Agregado das Exportações
-      </h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+        <h2 className="text-xl font-bold">Transações</h2>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <label htmlFor="filter" className="whitespace-nowrap">Filtrar por:</label>
+          <select
+            id="filter"
+            value={filterType}
+            onChange={handleFilterChange}
+            className="bg-sky-700 text-white px-3 py-2 rounded w-full sm:w-auto"
+          >
+            <option value="valor">Valor (R$)</option>
+            <option value="peso">Peso (Kg)</option>
+          </select>
+        </div>
+      </div>
+      
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-200">
           <thead className="text-xs uppercase bg-sky-500 text-white">
@@ -38,7 +62,8 @@ export default function ExportValueAddedTable({
               <th scope="col" className="px-4 py-3 min-w-[120px]">Nome</th>
               <th scope="col" className="px-4 py-3 w-32">País</th>
               <th scope="col" className="px-4 py-3 w-24">Via</th>
-              <th scope="col" className="px-4 py-3 w-32 text-right">Valor</th>
+              <th scope="col" className="px-4 py-3 w-32 text-right">Valor Agregado(R$)</th>
+              <th scope="col" className="px-4 py-3 w-32 text-right">Peso (Kg)</th>
             </tr>
           </thead>
           <tbody>
@@ -61,6 +86,12 @@ export default function ExportValueAddedTable({
                 </td>
                 <td className="px-4 py-4 text-black text-right whitespace-nowrap">
                   {item.valor.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  })}
+                </td>
+                <td className="px-4 py-4 text-black text-right whitespace-nowrap">
+                  {item.peso.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                   })}
@@ -70,21 +101,22 @@ export default function ExportValueAddedTable({
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between items-center mt-4">
+
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4">
         <button
-          className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50 w-full sm:w-auto"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
           Voltar
         </button>
-        <span>
+        <span className="text-center">
           Página {currentPage} de {totalPages}
         </span>
         <button
-          className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-sky-500 hover:bg-sky-600 rounded disabled:opacity-50 w-full sm:w-auto"
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || totalPages === 0}
         >
           Avançar
         </button>
