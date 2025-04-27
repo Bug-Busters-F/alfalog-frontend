@@ -1,6 +1,7 @@
 import { getAddedValues } from "../api/service/addedValue";
 import { getMovedCargo } from "../api/service/movedCargo";
 import { getNcmById } from "../api/service/ncm";
+import { getUFs } from "../api/service/UFs";
 
 export const getFormattedDataForAddedValuesTable = async (uf_id: number, ano: number) => {
     try {
@@ -72,3 +73,23 @@ export const getFormattedDataForMovedCargo = async (uf_id: number, ano: number) 
     return [];
   }
 };
+
+interface UFs{
+  id: number
+  codigo: number
+  nome: string
+  sigla: string
+  nome_regiao: string
+}
+
+export const getUFsDictionary = async() => {
+  const UFs = await getUFs();
+
+  let dictionary: Map<String,number> = new Map()
+
+  UFs.forEach((element:UFs) => {
+    dictionary.set(element.nome,element.id)
+  });
+
+  return dictionary
+}

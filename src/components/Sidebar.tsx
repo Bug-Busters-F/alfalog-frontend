@@ -1,6 +1,7 @@
 import Hamburger from "hamburger-react";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
+import ExportSwitch from "./ExportSwitch";
 import { FaGithub } from "react-icons/fa";
 import DownloadButton from "./downloadButton";
 
@@ -64,6 +65,9 @@ export default function SidebarLayout({ children }: SideBarProps) {
               </a>
                 <li>
                   <DownloadButton/>
+                </li>
+                <li className="mt-2">
+                  <ExportSwitch />
                 </li>
             </ul>
           </nav>
