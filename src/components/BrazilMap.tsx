@@ -8,6 +8,7 @@ import TransactionTable from "./TransactionTable";
 import { BarChart } from "./PathBarChart";
 import { useExport } from "../context/ExportContext";
 import { processTopUrfs } from "../util/processTopURFs";
+import { processTopRoutes } from "../util/processTopRoutes";
 
 const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
@@ -15,6 +16,7 @@ const BrazilMapComponent: React.FC = () => {
   const [isMapMinimized, setIsMapMinimized] = useState(false);
   const [formattedData, setFormattedData] = useState<any[]>([]);
   const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([])
+  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any []>([])
   const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
 
   const { selectedYear } = useGlobalState();
@@ -64,6 +66,15 @@ const BrazilMapComponent: React.FC = () => {
           console.error("Erro ao buscar os dados:", error);
         });
 
+        processTopRoutes(stateId,year,isExport)
+        .then((data) => {
+          console.log(data)
+          setMostUsedRoutesData(data)
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar os dados:", error);
+        });
+
     }
     console.log("Modo atual:", isExport ? "Exportação" : "Importação");
   }, [selectedState, selectedYear,isExport]);
@@ -80,17 +91,6 @@ const BrazilMapComponent: React.FC = () => {
     { ncm: "01012100", nome: "Cavalo puro-sangue para reprodução", pais: "Argentina", via: "Marítima", valor: 250000, peso: 500 },
     { ncm: "02071400", nome: "Cortes de frango congelados", pais: "China", via: "Aérea", valor: 54000, peso: 1200 },
     { ncm: "10063021", nome: "Arroz com casca polido", pais: "Japão", via: "Marítima", valor: 78000, peso: 2000 },
-    // Mais dados...
-  ];
-
-  const dataTest2 = [
-    { name: "VIA NAO DECLARADA", value: 120 },
-    { name: "MARITIMA", value: 450 },
-    { name: "FLUVIAL", value: 320 },
-    { name: "LACUSTRE", value: 150 },
-    { name: "AEREA", value: 780 },
-    { name: "POSTAL", value: 210 },
-    { name: "FERROVIARIA", value: 600 },
     // Mais dados...
   ];
 
@@ -187,7 +187,7 @@ const BrazilMapComponent: React.FC = () => {
                     {showTransactionTable === 1 ? (
                       <TransactionTable data={dataTest} onFilterChange={handleFilterChange}/>
                     ) : showTransactionTable === 2 ? (
-                      <BarChart data={dataTest2} />
+                      <BarChart data={mostUsedRoutesData} />
                     ) : showTransactionTable === 3 ?(
                       <BarChart data={mostUsedURFSData} />
                     ):(
