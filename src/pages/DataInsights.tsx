@@ -1,6 +1,7 @@
 import FilteredDataBarChart from "../components/RemovedEntriesChart"
 import SidebarLayout from "../components/Sidebar"
 import { GlobalYearStateProvider } from "../context/GlobalYearStateContext"
+import { ExportContextProvider } from "../context/ExportContext";
 
 const sampleData = [
   { label: 'Unid. medida inválida', removedCount: 47 },
@@ -18,6 +19,7 @@ const sampleData = [
 const DataInsights = () => {
     return(
     <div>
+    <ExportContextProvider>
       <GlobalYearStateProvider>
         <SidebarLayout>
           <div className="p-6 md:p-10 max-w-4xl mx-auto text-gray-800">
@@ -40,6 +42,7 @@ const DataInsights = () => {
             </div>
         </SidebarLayout>
       </GlobalYearStateProvider>
+    </ExportContextProvider>
     </div>
   )
   }
