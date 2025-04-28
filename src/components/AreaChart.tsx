@@ -1,7 +1,6 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-// Definindo a tipagem para as opções do gráfico
 interface ChartOptions {
   chart: {
     id: string;
@@ -24,48 +23,54 @@ interface ChartOptions {
       stops: number[];
     };
   };
+  markers?: {
+    size: number;
+  };
+  yaxis: {
+    opposite: boolean;
+    labels: {
+      formatter: (value: number) => string;
+    };
+  };
 }
 
-// Definindo a tipagem para os dados do gráfico
 interface ChartSeries {
   name: string;
   data: number[];
 }
 
-interface Data{
-    value: number
-    year: number
+interface Data {
+  value: number;
+  year: number;
 }
 
-interface AreaChartProps{
-    data: Data[]
+interface AreaChartProps {
+  data: Data[];
 }
 
 const AreaChart: React.FC<AreaChartProps> = (props: AreaChartProps) => {
-  // Dados do gráfico
   const series: ChartSeries[] = [
     {
-      name: "Preço Agregado",
-      data: props.data.map((item)=>item.value),
+      name: "Balança Comercial",
+      data: props.data.map((item) => item.value),
     },
   ];
 
-  // Opções do gráfico
   const options: ChartOptions = {
     chart: {
       id: "area-chart",
       toolbar: {
-        show: true, // Mostra a barra de ferramentas (zoom, exportação, etc.)
+        show: true,
       },
     },
     xaxis: {
-      categories: props.data.map((item=>item.year.toString())), // Categorias do eixo X
+      categories: props.data.map((item) => item.year.toString()),
     },
     stroke: {
-      curve: "smooth", // Linha suavizada
+      curve: "smooth",
     },
     fill: {
-      type: "gradient", // Preenchimento com gradiente
+      type: "gradient",
       gradient: {
         shadeIntensity: 1,
         opacityFrom: 0.7,
@@ -73,12 +78,21 @@ const AreaChart: React.FC<AreaChartProps> = (props: AreaChartProps) => {
         stops: [0, 100],
       },
     },
+    markers: {
+      size: 5,
+    },
+    yaxis: {
+      opposite: true,
+      labels: {
+        formatter: (value) => `${value < 0 ? "" : "+"}${value}`,
+      },
+    },
   };
 
   return (
-    <div className="p-5 bg-sky-900 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4 text-white">Evolução da Balança Comercial</h2>
-      <div className="shadow-md bg-gray-200 border-b border-sky-700 rounded-lg">
+    <div className="p-5 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4 text-gray-700">Evolução da Balança Comercial</h2>
+      <div className="shadow-mdborder-b border-sky-700 rounded-lg">
         <Chart
           options={options}
           series={series}
