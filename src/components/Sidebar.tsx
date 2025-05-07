@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
 import ExportSwitch from "./ExportSwitch";
 import { FaGithub } from "react-icons/fa";
-import DownloadButton from "./downloadButton";
+import DownloadButton from "./DownloadButton";
 
 interface SideBarProps {
   children?: ReactNode;
@@ -61,6 +61,11 @@ export default function SidebarLayout({ children }: SideBarProps) {
               <a href="/relatorios">
                 <li className="mb-2 p-2 hover:bg-sky-800 rounded">
                   Relatórios
+                </li>
+              </a>
+              <a href="/pesquisa">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Pesquisar
                 </li>
               </a>
                 <li>
