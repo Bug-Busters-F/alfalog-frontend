@@ -1,4 +1,3 @@
-import SearchBar from "../components/SearchBar"
 import SearchTable from "../components/SearchTable"
 import SidebarLayout from "../components/Sidebar"
 import { ExportContextProvider } from "../context/ExportContext"
@@ -23,7 +22,6 @@ const Search = () => {
                                 Consulte e filtre transações manualmente
                             </h3>
                         </div>
-                        {/* <SearchBar></SearchBar> */}
                         <SearchTable></SearchTable>
                     </SidebarLayout>
                 </GlobalYearStateProvider>
