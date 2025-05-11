@@ -60,12 +60,59 @@ const SearchTable = () => {
 
     const totalPages = Math.ceil(dadosFiltrados.length / rowsPerPage);
     const inicio = (currentPage - 1) * rowsPerPage;
-    const visiveis = dadosFiltrados.slice(inicio, inicio + rowsPerPage);
+
+    const labels: Record<keyof Transacao, string> = {
+        id: 'ID',
+        CO_ANO: 'Ano',
+        CO_MES: 'Mês',
+        CO_NCM: 'NCM',
+        CO_UNID: 'Unidade',
+        CO_PAIS: 'País',
+        SG_UF_NCM: 'UF',
+        CO_VIA: 'Via',
+        CO_URF: 'URF',
+        QT_ESTAT: 'Quantidade',
+        KG_LIQUIDO: 'KG Líquido',
+        VL_FOB: 'Valor FOB'
+    };
+
+    const [ordem, setOrdem] = useState<{ coluna: keyof Transacao; direcao: 'asc' | 'desc' | null }>({
+        coluna: 'CO_ANO',
+        direcao: null
+    });
+
+    const toggleOrdem = (coluna: keyof Transacao) => {
+        setOrdem(prev => {
+            if (prev.coluna === coluna) {
+                if (prev.direcao === 'asc') return { coluna, direcao: 'desc' };
+                if (prev.direcao === 'desc') return { coluna, direcao: null };
+                return { coluna, direcao: 'asc' };
+            }
+            return { coluna, direcao: 'asc' };
+        });
+    };
+
+    const dadosFiltradosOrdenados = [...dadosFiltrados].sort((a, b) => {
+        if (!ordem.direcao) return 0;
+
+        const valorA = a[ordem.coluna];
+        const valorB = b[ordem.coluna];
+
+        if (typeof valorA === 'number' && typeof valorB === 'number') {
+            return ordem.direcao === 'asc' ? valorA - valorB : valorB - valorA;
+        }
+
+        return ordem.direcao === 'asc'
+            ? String(valorA).localeCompare(String(valorB))
+            : String(valorB).localeCompare(String(valorA));
+    });
+
+    const visiveis = dadosFiltradosOrdenados.slice(inicio, inicio + rowsPerPage);
 
     return (
         <div className="p-4">
             {/* Filtros superiores */}
-            <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+            <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-9 gap-2">
                 <input
                     type="text"
                     placeholder="Pesquisar por NCM"
@@ -76,18 +123,18 @@ const SearchTable = () => {
                     }}
                     className="border px-3 py-2 rounded w-full"
                 />
-                {(['CO_ANO', 'CO_MES', 'CO_UNID', 'CO_PAIS', 'SG_UF_NCM', 'CO_VIA'] as (keyof Transacao)[]).map((campo) => (
+                {(['CO_ANO', 'CO_MES', 'CO_NCM', 'CO_UNID', 'CO_PAIS', 'SG_UF_NCM', 'CO_VIA', 'CO_URF'] as (keyof Transacao)[]).map((campo) => (
                     <select
                         key={campo}
                         value={filtros[campo] || ''}
                         onChange={e => handleFiltroChange(campo, e.target.value)}
                         className="border px-3 py-2 rounded w-full"
                     >
-                        <option value="">{campo}</option>
+                        <option value="">{`${labels[campo]}`}</option>
                         {valoresUnicos(campo).map(valor => (
                             <option key={valor} value={valor}>{valor}</option>
                         ))}
-                    </select>   
+                    </select>
                 ))}
             </div>
 
@@ -95,47 +142,53 @@ const SearchTable = () => {
             <div className="mb-4">
                 <button
                     onClick={limparFiltros}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition duration-300"
                 >
                     Limpar Filtros
                 </button>
             </div>
 
+
             {/* Tabela */}
             <div className="overflow-x-auto">
                 <table className="min-w-full border border-gray-300 text-sm text-left">
-                    <thead className="bg-sky-900 text-white">
-                        <tr>
-                            <th className="px-4 py-2">Ano</th>
-                            <th className="px-4 py-2">Mês</th>
-                            <th className="px-4 py-2">NCM</th>
-                            <th className="px-4 py-2">Unidade</th>
-                            <th className="px-4 py-2">País</th>
-                            <th className="px-4 py-2">UF</th>
-                            <th className="px-4 py-2">Via</th>
-                            <th className="px-4 py-2">URF</th>
-                            <th className="px-4 py-2">Quantidade</th>
-                            <th className="px-4 py-2">KG</th>
-                            <th className="px-4 py-2">Valor FOB</th>
+                    <thead>
+                        <tr className="bg-sky-900 text-white">
+                            {(Object.keys(labels) as (keyof Transacao)[])
+                                .filter(coluna => coluna !== 'id')
+                                .map(coluna => (
+                                    <th
+                                        key={coluna}
+                                        onClick={() => toggleOrdem(coluna)}
+                                        className={`px-4 py-2 text-left cursor-pointer ${ordem.coluna === coluna ? 'bg-sky-800' : ''
+                                            }`}
+                                    >
+                                        {labels[coluna]}
+                                        <span className="ml-1 text-xs">
+                                            {ordem.coluna === coluna
+                                                ? ordem.direcao === 'asc'
+                                                    ? '▲'
+                                                    : ordem.direcao === 'desc'
+                                                        ? '▼'
+                                                        : '↕'
+                                                : '↕'}
+                                        </span>
+                                    </th>
+                                ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {visiveis.map((t) => (
-                            <tr key={t.id} className="odd:bg-white even:bg-gray-50">
-                                <td className="px-4 py-2">{t.CO_ANO}</td>
-                                <td className="px-4 py-2">{t.CO_MES}</td>
-                                <td className="px-4 py-2">{t.CO_NCM}</td>
-                                <td className="px-4 py-2">{t.CO_UNID}</td>
-                                <td className="px-4 py-2">{t.CO_PAIS}</td>
-                                <td className="px-4 py-2">{t.SG_UF_NCM}</td>
-                                <td className="px-4 py-2">{t.CO_VIA}</td>
-                                <td className="px-4 py-2">{t.CO_URF}</td>
-                                <td className="px-4 py-2">{t.QT_ESTAT}</td>
-                                <td className="px-4 py-2">{t.KG_LIQUIDO}</td>
-                                <td className="px-4 py-2">{t.VL_FOB}</td>
+                        {visiveis.map((row, i) => (
+                            <tr key={row.id} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'}>
+                                {(Object.keys(labels) as (keyof Transacao)[])
+                                    .filter(coluna => coluna !== 'id')
+                                    .map(coluna => (
+                                        <td key={coluna} className="px-4 py-2">{row[coluna]}</td>
+                                    ))}
                             </tr>
                         ))}
                     </tbody>
+
                 </table>
             </div>
 
