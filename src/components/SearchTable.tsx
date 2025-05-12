@@ -123,7 +123,7 @@ const SearchTable = () => {
                     }}
                     className="border px-3 py-2 rounded w-full"
                 />
-                {(['CO_ANO', 'CO_MES', 'CO_NCM', 'CO_UNID', 'CO_PAIS', 'SG_UF_NCM', 'CO_VIA', 'CO_URF'] as (keyof Transacao)[]).map((campo) => (
+                {(['CO_ANO', 'CO_PAIS', 'SG_UF_NCM', 'CO_VIA', 'CO_URF'] as (keyof Transacao)[]).map((campo) => (
                     <select
                         key={campo}
                         value={filtros[campo] || ''}
