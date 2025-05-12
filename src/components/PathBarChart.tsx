@@ -75,22 +75,32 @@ export const BarChart: React.FC<BarChartProps> = ({ data }) => {
     },
   });
 
-  useEffect(() => {
-    const values = data.map((item) => item.value);
-    const labels = data.map((item) => item.name);
+useEffect(() => {
+  const values = data.map((item) => item.value);
+  const labels = data.map((item) => item.name);
 
-    setChartData((prev) => ({
-      ...prev,
-      series: [{ data: values }],
-      options: {
-        ...prev.options,
-        xaxis: {
-          ...prev.options.xaxis,
-          categories: labels,
+  setChartData((prev) => ({
+    ...prev,
+    series: [{ name: "Quantidade", data: values }],
+    options: {
+      ...prev.options,
+      xaxis: {
+        ...prev.options.xaxis,
+        categories: labels,
+      },
+      tooltip: {
+        ...prev.options.tooltip,
+        y: {
+          formatter: (value: number) => `${value}`,
+          title: {
+            formatter: () => "Quantidade",
+          },
         },
       },
-    }));
-  }, [data]);
+    },
+  }));
+}, [data]);
+
 
   return (
     <div className="w-full">
