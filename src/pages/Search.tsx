@@ -1,3 +1,4 @@
+import NCMTable from "../components/NCMTable"
 import SearchTable from "../components/SearchTable"
 import SidebarLayout from "../components/Sidebar"
 import { ExportContextProvider } from "../context/ExportContext"
@@ -23,6 +24,7 @@ const Search = () => {
                             </h3>
                         </div>
                         <SearchTable></SearchTable>
+                        <NCMTable></NCMTable>
                         <div className="p-6 md:p-10 text-gray-800">
                             <h3 className="text-2xl font-semibold mb-4">Fonte de dados</h3>
                             <p className="mb-3">
@@ -40,15 +42,6 @@ const Search = () => {
                                 Ou então, faça o download das legendas aqui:
                             </p>
                             <p className="py-4">
-                                <a
-                                    href="https://balanca.economia.gov.br/balanca/bd/tabelas/NCM.csv"
-                                    download
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
-                                >
-                                    NCM
-                                </a>
                                 <a
                                     href="https://balanca.economia.gov.br/balanca/bd/tabelas/NCM_UNIDADE.csv"
                                     download

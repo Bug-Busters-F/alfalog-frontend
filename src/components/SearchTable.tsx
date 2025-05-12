@@ -29,6 +29,7 @@ const todasTransacoes: Transacao[] = [
 ];
 
 const SearchTable = () => {
+    const [searchInput, setSearchInput] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [filtros, setFiltros] = useState<Partial<Transacao>>({});
@@ -50,6 +51,7 @@ const SearchTable = () => {
         setFiltros({});
         setSearchTerm('');
         setCurrentPage(1);
+        setSearchInput('');
     };
 
     const dadosFiltrados = todasTransacoes.filter((t) => {
@@ -112,17 +114,15 @@ const SearchTable = () => {
     return (
         <div className="p-4">
             {/* Filtros superiores */}
-            <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-9 gap-2">
+            <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-9 gap-2 mb-4">
                 <input
                     type="text"
                     placeholder="Pesquisar por NCM"
-                    value={searchTerm}
-                    onChange={e => {
-                        setSearchTerm(e.target.value);
-                        setCurrentPage(1);
-                    }}
+                    value={searchInput}
+                    onChange={e => setSearchInput(e.target.value)}
                     className="border px-3 py-2 rounded w-full"
                 />
+
                 {(['CO_ANO', 'CO_PAIS', 'SG_UF_NCM', 'CO_VIA', 'CO_URF'] as (keyof Transacao)[]).map((campo) => (
                     <select
                         key={campo}
@@ -136,10 +136,15 @@ const SearchTable = () => {
                         ))}
                     </select>
                 ))}
-            </div>
-
-            {/* Botão Limpar Filtros */}
-            <div className="mb-4">
+                <button
+                    onClick={() => {
+                        setSearchTerm(searchInput);
+                        setCurrentPage(1);
+                    }}
+                    className="bg-green-600 text-white rounded px-3 py-2"
+                >
+                    Pesquisar
+                </button>
                 <button
                     onClick={limparFiltros}
                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition duration-300"
@@ -147,6 +152,7 @@ const SearchTable = () => {
                     Limpar Filtros
                 </button>
             </div>
+
 
 
             {/* Tabela */}
