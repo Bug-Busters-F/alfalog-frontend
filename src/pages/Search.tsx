@@ -39,13 +39,13 @@ const Search = () => {
                             <p className="mb-3">
                                 Ou então, faça o download das legendas aqui:
                             </p>
-                            <p className="flex justify-between items-center py-4 w-1/4">
+                            <p className="py-4">
                                 <a
                                     href="https://balanca.economia.gov.br/balanca/bd/tabelas/NCM.csv"
                                     download
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300"
+                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
                                 >
                                     NCM
                                 </a>
@@ -54,7 +54,7 @@ const Search = () => {
                                     download
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300"
+                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
                                 >
                                     Unidade
                                 </a>
@@ -63,7 +63,7 @@ const Search = () => {
                                     download
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300"
+                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
                                 >
                                     País
                                 </a>
@@ -72,7 +72,7 @@ const Search = () => {
                                     download
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300"
+                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
                                 >
                                     Via
                                 </a>
