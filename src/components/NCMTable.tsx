@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
+import { IoIosArrowForward } from "react-icons/io";
 
 interface NcmEntry {
     code: string;
@@ -103,7 +104,14 @@ const NCMTable: React.FC = () => {
                     {paginatedData.map((item, idx) => (
                         <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'}>
                             <td className="px-4 py-2 w-20">{item.code}</td>
-                            <td className="px-4 py-2">{item.description}</td>
+                            <td className="px-4 py-2">
+                                <div className="flex items-center justify-between">
+                                    {item.description}
+                                    <div>
+                                        <IoIosArrowForward />
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     ))}
                 </table>

@@ -114,10 +114,10 @@ const SearchTable = () => {
     return (
         <div className="p-4">
             {/* Filtros superiores */}
-            <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-9 gap-2 mb-4">
+            <div className="mb-2 flex display-row w-full gap-2 h-11">
                 <input
                     type="text"
-                    placeholder="Pesquisar por NCM"
+                    placeholder="NCM"
                     value={searchInput}
                     onChange={e => setSearchInput(e.target.value)}
                     className="border px-3 py-2 rounded w-full"
@@ -128,7 +128,7 @@ const SearchTable = () => {
                         key={campo}
                         value={filtros[campo] || ''}
                         onChange={e => handleFiltroChange(campo, e.target.value)}
-                        className="border px-3 py-2 rounded w-full"
+                        className="border px-3 rounded w-full"
                     >
                         <option value="">{`${labels[campo]}`}</option>
                         {valoresUnicos(campo).map(valor => (
@@ -149,7 +149,7 @@ const SearchTable = () => {
                     onClick={limparFiltros}
                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition duration-300"
                 >
-                    Limpar Filtros
+                    Limpar
                 </button>
             </div>
 
