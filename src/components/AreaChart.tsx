@@ -1,106 +1,102 @@
-import React from "react";
-import Chart from "react-apexcharts";
+import React from 'react';
+import Chart from 'react-apexcharts';
 
-interface ChartOptions {
-  chart: {
-    id: string;
-    toolbar?: {
-      show: boolean;
-    };
-  };
-  xaxis: {
-    categories: string[];
-  };
-  stroke?: {
-    curve: "smooth" | "straight" | "stepline";
-  };
-  fill?: {
-    type: "solid" | "gradient";
-    gradient?: {
-      shadeIntensity: number;
-      opacityFrom: number;
-      opacityTo: number;
-      stops: number[];
-    };
-  };
-  markers?: {
-    size: number;
-  };
-  yaxis: {
-    opposite: boolean;
-    labels: {
-      formatter: (value: number) => string;
-    };
-  };
-}
-
-interface ChartSeries {
-  name: string;
-  data: number[];
-}
-
-interface Data {
-  value: number;
+interface DataPoint {
   year: number;
+  value: number;
 }
 
 interface AreaChartProps {
-  data: Data[];
+  data: DataPoint[];
+  forecastData: DataPoint[];
 }
 
-const AreaChart: React.FC<AreaChartProps> = (props: AreaChartProps) => {
-  const series: ChartSeries[] = [
+const AreaChart: React.FC<AreaChartProps> = ({ data, forecastData }) => {
+  // Adiciona o último ponto de dados reais no início da série de previsão (continuidade visual)
+  let forecastSeriesData: DataPoint[] = [];
+  if (data.length > 0) {
+    const lastReal = data[data.length - 1];
+    forecastSeriesData = forecastData.length > 0
+      ? [{ year: lastReal.year, value: lastReal.value }, ...forecastData]
+      : [];
+  }
+
+  // Prepara as séries para o gráfico: x como timestamp para o ano
+  const series = [
     {
-      name: "Balança Comercial",
-      data: props.data.map((item) => item.value),
+      name: 'Dados Reais',
+      data: data.map(item => ({ x: new Date(item.year, 0, 1).getTime(), y: item.value })),
+    },
+    {
+      name: 'Previsão',
+      data: forecastSeriesData.map(item => ({ x: new Date(item.year, 0, 1).getTime(), y: item.value })),
     },
   ];
 
-  const options: ChartOptions = {
+  const options: ApexCharts.ApexOptions = {
     chart: {
-      id: "area-chart",
+      type: 'area',
       toolbar: {
-        show: true,
+        show: true, // 🔥 Ativa a toolbar interativa
+        tools: {
+          download: true,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+          reset: true,
+        },
       },
+      zoom: { enabled: true }, // 🔍 Ativa o zoom interativo
     },
-    xaxis: {
-      categories: props.data.map((item) => item.year.toString()),
-    },
+    colors: ['#3B82F6', '#F97316'],
     stroke: {
-      curve: "smooth",
+      curve: 'smooth',
+      width: 2,
+      dashArray: [0, 4], // Traço liso e tracejado para diferenciação
     },
     fill: {
-      type: "gradient",
+      type: 'gradient',
       gradient: {
-        shadeIntensity: 1,
+        shade: 'dark',
+        type: 'horizontal',
+        shadeIntensity: 0.5,
         opacityFrom: 0.7,
-        opacityTo: 0.9,
+        opacityTo: 0.0,
         stops: [0, 100],
       },
     },
     markers: {
-      size: 5,
+      size: 4,
+    },
+    xaxis: {
+      type: 'datetime',
+      title: { text: 'Ano' },
+      labels: {
+        format: 'yyyy',
+      },
     },
     yaxis: {
-      opposite: true,
       labels: {
-        formatter: (value) => `${value < 0 ? "" : "+"}${value}`,
+        formatter: (val: number) => val.toLocaleString(),
       },
+    },
+    tooltip: {
+      x: {
+        format: 'yyyy',
+      },
+    },
+
+    legend: {
+      position: 'top',
     },
   };
 
   return (
-    <div className="p-5 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4 text-gray-700">Evolução da Balança Comercial</h2>
-      <div className="shadow-mdborder-b border-sky-700 rounded-lg">
-        <Chart
-          options={options}
-          series={series}
-          type="area"
-          width="100%"
-          height={350}
-        />
-      </div>
+    <div className="bg-white shadow rounded-lg p-4">
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">Comparação de Dados Reais e Previsão</h2>
+      <Chart options={options} series={series} type="area" height={350} width="100%" />
     </div>
   );
 };

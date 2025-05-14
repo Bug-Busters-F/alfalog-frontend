@@ -14,9 +14,13 @@ const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [chartKey, setChartKey] = useState(0);
   const [isMapMinimized, setIsMapMinimized] = useState(false);
-  const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([]);
-  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any []>([]);
-  const [tradeBalanceData, setTradeBalanceData] = useState<any []>([]);
+  const [mostUsedURFSData, setMostUsedURFSData] = useState<any[]>([]);
+  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any[]>([]);
+  const [tradeBalanceData, setTradeBalanceData] = useState<any[]>([]);
+  const [tradeBalanceDataForecast, setTradeBalanceDataForecast] = useState<any[]>([
+    { year: 2025, value: 320000 },
+    { year: 2026, value: -100000 },
+  ]);
   const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
 
   const { selectedYear } = useGlobalState();
@@ -66,6 +70,14 @@ const BrazilMapComponent: React.FC = () => {
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
+
+      // tradeBalanceForecast(stateId)
+      //   .then((data) => {
+      //     setTradeBalanceDataForecast(data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Erro ao buscar os dados:", error);
+      //   });
     }
     console.log("Modo atual:", isExport ? "Exportação" : "Importação");
   }, [selectedState, selectedYear, isExport]);
@@ -149,7 +161,7 @@ const BrazilMapComponent: React.FC = () => {
                     ) : showTransactionTable === 3 ? (
                       <BarChart data={mostUsedURFSData} />
                     ) : (
-                      <AreaChart data={tradeBalanceData} />
+                      <AreaChart data={tradeBalanceData} forecastData={tradeBalanceDataForecast} />
                     )}
                   </div>
                 </div>
