@@ -7,9 +7,9 @@ type Result = {
   value: number;
 };
 
-export const processTopUrfs = async (uf_id: number, year: number, isExport: boolean): Promise<Result[]> => {
+export const processTopUrfs = async (uf_id: number, year_start: number, year_end: number, isExport: boolean): Promise<Result[]> => {
   try {
-    const tradeData = await mostUsedUFRS(isExport, uf_id, year);
+    const tradeData = await mostUsedUFRS(isExport, uf_id, year_start, year_end);
 
     const topTradeData = await Promise.all(
       tradeData

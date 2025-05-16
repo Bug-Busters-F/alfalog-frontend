@@ -5,8 +5,8 @@ export type Result = {
   value: number;
 };
 
-export const processTopRoutes = async (uf_id: number, year: number, isExport: boolean): Promise<Result[]> => {
-  const rawData = await mostUsedRoutes(isExport, uf_id, year);
+export const processTopRoutes = async (uf_id: number, year_start: number, year_end: number, isExport: boolean): Promise<Result[]> => {
+  const rawData = await mostUsedRoutes(isExport, uf_id, year_start, year_end);
 
   const routes = JSON.parse(localStorage.getItem("routes") || "[]");
 
