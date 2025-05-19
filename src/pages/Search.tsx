@@ -52,24 +52,6 @@ const Search = () => {
                                     Unidade
                                 </a>
                                 <a
-                                    href="https://balanca.economia.gov.br/balanca/bd/tabelas/PAIS.csv"
-                                    download
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
-                                >
-                                    País
-                                </a>
-                                <a
-                                    href="https://balanca.economia.gov.br/balanca/bd/tabelas/VIA.csv"
-                                    download
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded inline-block transition duration-300 mr-3"
-                                >
-                                    Via
-                                </a>
-                                <a
                                     href="https://balanca.economia.gov.br/balanca/bd/tabelas/URF.csv"
                                     download
                                     target="_blank"

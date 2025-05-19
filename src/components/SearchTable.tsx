@@ -1,120 +1,167 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface Transacao {
     id: string;
-    CO_ANO: string;
-    CO_MES: string;
-    CO_NCM: string;
-    CO_UNID: string;
-    CO_PAIS: string;
-    SG_UF_NCM: string;
-    CO_VIA: string;
-    CO_URF: string;
-    QT_ESTAT: string;
-    KG_LIQUIDO: string;
-    VL_FOB: string;
+    ano: string;
+    mes: string;
+    ncm: string;
+    unid: string;
+    pais: string;
+    uf: string;
+    via: string;
+    urf: string;
+    peso: string;
+    valor: string;
 }
 
-const todasTransacoes: Transacao[] = [
-    { id: "1", CO_ANO: "2014", CO_MES: "03", CO_NCM: "94019090", CO_UNID: "10", CO_PAIS: "275", SG_UF_NCM: "PR", CO_VIA: "01", CO_URF: "0917800", QT_ESTAT: "6", KG_LIQUIDO: "6", VL_FOB: "80" },
-    { id: "2", CO_ANO: "2015", CO_MES: "05", CO_NCM: "84082029", CO_UNID: "9", CO_PAIS: "105", SG_UF_NCM: "SP", CO_VIA: "02", CO_URF: "0717800", QT_ESTAT: "8", KG_LIQUIDO: "12", VL_FOB: "120" },
-    { id: "3", CO_ANO: "2016", CO_MES: "07", CO_NCM: "87032390", CO_UNID: "7", CO_PAIS: "160", SG_UF_NCM: "RJ", CO_VIA: "03", CO_URF: "0817800", QT_ESTAT: "10", KG_LIQUIDO: "20", VL_FOB: "300" },
-    { id: "4", CO_ANO: "2017", CO_MES: "09", CO_NCM: "62034200", CO_UNID: "4", CO_PAIS: "320", SG_UF_NCM: "RS", CO_VIA: "01", CO_URF: "0917800", QT_ESTAT: "4", KG_LIQUIDO: "5", VL_FOB: "60" },
-    { id: "5", CO_ANO: "2018", CO_MES: "11", CO_NCM: "85044090", CO_UNID: "5", CO_PAIS: "380", SG_UF_NCM: "SC", CO_VIA: "04", CO_URF: "0617800", QT_ESTAT: "6", KG_LIQUIDO: "10", VL_FOB: "150" },
-    { id: "6", CO_ANO: "2019", CO_MES: "01", CO_NCM: "90031110", CO_UNID: "6", CO_PAIS: "400", SG_UF_NCM: "MG", CO_VIA: "05", CO_URF: "0517800", QT_ESTAT: "2", KG_LIQUIDO: "3", VL_FOB: "40" },
-    { id: "7", CO_ANO: "2020", CO_MES: "02", CO_NCM: "91011100", CO_UNID: "3", CO_PAIS: "420", SG_UF_NCM: "BA", CO_VIA: "06", CO_URF: "0417800", QT_ESTAT: "9", KG_LIQUIDO: "14", VL_FOB: "200" },
-    { id: "8", CO_ANO: "2021", CO_MES: "04", CO_NCM: "94036000", CO_UNID: "2", CO_PAIS: "440", SG_UF_NCM: "CE", CO_VIA: "07", CO_URF: "0317800", QT_ESTAT: "5", KG_LIQUIDO: "7", VL_FOB: "90" },
-    { id: "9", CO_ANO: "2022", CO_MES: "06", CO_NCM: "85176231", CO_UNID: "1", CO_PAIS: "460", SG_UF_NCM: "PE", CO_VIA: "08", CO_URF: "0217800", QT_ESTAT: "3", KG_LIQUIDO: "6", VL_FOB: "110" },
-    { id: "10", CO_ANO: "2023", CO_MES: "08", CO_NCM: "87021000", CO_UNID: "8", CO_PAIS: "480", SG_UF_NCM: "AM", CO_VIA: "09", CO_URF: "0117800", QT_ESTAT: "7", KG_LIQUIDO: "9", VL_FOB: "170" },
-];
+interface ApiResponse {
+    data: Transacao[];
+    page: number;
+    perPage: number;
+    totalPages: number;
+    totalCount: number;
+}
 
-const SearchTable = () => {
+interface Option {
+    id: string;
+    label: string;
+}
+
+const rowsPerPage = 10;
+
+const SearchTable: React.FC = () => {
+    const [filtros, setFiltros] = useState<Partial<Record<'coAno' | 'coMes' | 'coPais' | 'sgUfNcm' | 'coVia' | 'coUrf', string>>>({});
     const [searchInput, setSearchInput] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [data, setData] = useState<Transacao[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [filtros, setFiltros] = useState<Partial<Transacao>>({});
-    const rowsPerPage = 10;
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
 
-    const valoresUnicos = (campo: keyof Transacao) => {
-        return Array.from(new Set(todasTransacoes.map(t => t[campo]))).sort();
+    const [sortBy, setSortBy] = useState<keyof Transacao>('ano');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+    // Estados para opções de filtro como Option[]
+    const [anosOpts, setAnosOpts] = useState<Option[]>([]);
+    const [mesOpts, setMesOpts] = useState<Option[]>([]);
+    const [paisOpts, setPaisOpts] = useState<Option[]>([]);
+    const [ufOpts, setUfOpts] = useState<Option[]>([]);
+    const [viaOpts, setViaOpts] = useState<Option[]>([]);
+    const [urfOpts, setUrfOpts] = useState<Option[]>([]);
+
+    // Fetch distinct filter options uma vez
+    useEffect(() => {
+        const fetchDistinct = async () => {
+            try {
+                const [
+                    respAnos,
+                    respMes,
+                    respPais,
+                    respUF,
+                    respVia,
+                    respURF
+                ] = await Promise.all([
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coAno'),
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coMes'),
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coPais'),
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=sgUfNcm'),
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coVia'),
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coUrf'),
+                ]);
+
+                setAnosOpts(respAnos.data.values);
+                setMesOpts(respMes.data.values);    
+                setPaisOpts(respPais.data.values);
+                setUfOpts(respUF.data.values);
+                setViaOpts(respVia.data.values);
+                setUrfOpts(respURF.data.values);
+            } catch (err) {
+                console.error('Erro ao carregar filtros', err);
+            }
+        };
+
+        fetchDistinct();
+    }, []);
+
+
+    const fetchTransacoes = async (page = currentPage) => {
+        setLoading(true);
+        try {
+            const params = {
+                ...filtros,
+                searchNcm: searchTerm,
+                page,
+                perPage: rowsPerPage,
+                sortBy,
+                sortOrder
+            };
+            const resp = await axios.get<ApiResponse>(
+                'http://localhost:5000/api/transacoes',
+                { params }
+            );
+            setData(resp.data.data);
+            setTotalPages(resp.data.totalPages);
+            setCurrentPage(resp.data.page);
+        } catch (err) {
+            console.error('Erro ao buscar transações', err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleFiltroChange = (campo: keyof Transacao, valor: string) => {
+    useEffect(() => {
+        if (searchTerm) fetchTransacoes(currentPage);
+    }, [sortBy, sortOrder]);
+
+    const onPesquisar = () => {
+        setSearchTerm(searchInput);
+        fetchTransacoes(1);
+    };
+
+    const handleFiltroChange = (
+        campo: 'coAno' | 'coMes' | 'coPais' | 'sgUfNcm' | 'coVia' | 'coUrf',
+        valor: string
+    ) => {
         setFiltros(prev => ({
             ...prev,
-            [campo]: valor === '' ? undefined : valor
+            [campo]: valor || undefined
         }));
         setCurrentPage(1);
     };
 
     const limparFiltros = () => {
         setFiltros({});
-        setSearchTerm('');
-        setCurrentPage(1);
         setSearchInput('');
+        setSearchTerm('');
+        setData([]);
+        setCurrentPage(1);
     };
 
-    const dadosFiltrados = todasTransacoes.filter((t) => {
-        return Object.entries(filtros).every(([campo, valor]) => {
-            return valor === undefined || t[campo as keyof Transacao] === valor;
-        }) && t.CO_NCM.includes(searchTerm);
-    });
-
-    const totalPages = Math.ceil(dadosFiltrados.length / rowsPerPage);
-    const inicio = (currentPage - 1) * rowsPerPage;
-
-    const labels: Record<keyof Transacao, string> = {
-        id: 'ID',
-        CO_ANO: 'Ano',
-        CO_MES: 'Mês',
-        CO_NCM: 'NCM',
-        CO_UNID: 'Unidade',
-        CO_PAIS: 'País',
-        SG_UF_NCM: 'UF',
-        CO_VIA: 'Via',
-        CO_URF: 'URF',
-        QT_ESTAT: 'Quantidade',
-        KG_LIQUIDO: 'KG Líquido',
-        VL_FOB: 'Valor FOB'
-    };
-
-    const [ordem, setOrdem] = useState<{ coluna: keyof Transacao; direcao: 'asc' | 'desc' | null }>({
-        coluna: 'CO_ANO',
-        direcao: null
-    });
-
-    const toggleOrdem = (coluna: keyof Transacao) => {
-        setOrdem(prev => {
-            if (prev.coluna === coluna) {
-                if (prev.direcao === 'asc') return { coluna, direcao: 'desc' };
-                if (prev.direcao === 'desc') return { coluna, direcao: null };
-                return { coluna, direcao: 'asc' };
-            }
-            return { coluna, direcao: 'asc' };
-        });
-    };
-
-    const dadosFiltradosOrdenados = [...dadosFiltrados].sort((a, b) => {
-        if (!ordem.direcao) return 0;
-
-        const valorA = a[ordem.coluna];
-        const valorB = b[ordem.coluna];
-
-        if (typeof valorA === 'number' && typeof valorB === 'number') {
-            return ordem.direcao === 'asc' ? valorA - valorB : valorB - valorA;
+    const handleSort = (coluna: keyof Transacao) => {
+        if (sortBy === coluna) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortBy(coluna);
+            setSortOrder('asc');
         }
+        fetchTransacoes(currentPage);
+    };
 
-        return ordem.direcao === 'asc'
-            ? String(valorA).localeCompare(String(valorB))
-            : String(valorB).localeCompare(String(valorA));
-    });
-
-    const visiveis = dadosFiltradosOrdenados.slice(inicio, inicio + rowsPerPage);
+    // Reordenar colunas dinamicamente
+    const desiredOrder: (keyof Transacao)[] = [
+        'ano', 'mes', 'ncm', 'pais', 'uf', 'via', 'urf', 'peso', 'valor'
+    ];
+    const colunas = data.length > 0
+        ? (Object.keys(data[0]) as (keyof Transacao)[])
+            .filter(c => c !== 'id')
+            .sort((a, b) => desiredOrder.indexOf(a) - desiredOrder.indexOf(b))
+        : [];
 
     return (
         <div className="p-4">
             {/* Filtros superiores */}
-            <div className="mb-2 flex display-row w-full gap-2 h-11">
+            <div className="mb-2 w-full gap-2 grid grid-cols-9">
                 <input
                     type="text"
                     placeholder="NCM"
@@ -123,101 +170,136 @@ const SearchTable = () => {
                     className="border px-3 py-2 rounded w-full"
                 />
 
-                {(['CO_ANO', 'CO_PAIS', 'SG_UF_NCM', 'CO_VIA', 'CO_URF'] as (keyof Transacao)[]).map((campo) => (
-                    <select
-                        key={campo}
-                        value={filtros[campo] || ''}
-                        onChange={e => handleFiltroChange(campo, e.target.value)}
-                        className="border px-3 rounded w-full"
-                    >
-                        <option value="">{`${labels[campo]}`}</option>
-                        {valoresUnicos(campo).map(valor => (
-                            <option key={valor} value={valor}>{valor}</option>
-                        ))}
-                    </select>
-                ))}
+                {/* Dropdowns usando Option[] */}
+                <select
+                    value={filtros.coAno || ''}
+                    onChange={e => handleFiltroChange('coAno', e.target.value)}
+                    className="border px-3 rounded"
+                >
+                    <option value="">Ano</option>
+                    {anosOpts.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                </select>
+
+                <select
+                    value={filtros.coMes || ''}
+                    onChange={e => handleFiltroChange('coMes', e.target.value)}
+                    className="border px-3 rounded"
+                >
+                    <option value="">Mês</option>
+                    {mesOpts.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                </select>
+
+                <select
+                    value={filtros.coPais || ''}
+                    onChange={e => handleFiltroChange('coPais', e.target.value)}
+                    className="border px-3 rounded"
+                >
+                    <option value="">País</option>
+                    {paisOpts.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                </select>
+
+                <select
+                    value={filtros.sgUfNcm || ''}
+                    onChange={e => handleFiltroChange('sgUfNcm', e.target.value)}
+                    className="border px-3 rounded"
+                >
+                    <option value="">UF</option>
+                    {ufOpts.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                </select>
+
+                <select
+                    value={filtros.coVia || ''}
+                    onChange={e => handleFiltroChange('coVia', e.target.value)}
+                    className="border px-3 rounded"
+                >
+                    <option value="">Via</option>
+                    {viaOpts.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                </select>
+
+                <select
+                    value={filtros.coUrf || ''}
+                    onChange={e => handleFiltroChange('coUrf', e.target.value)}
+                    className="border px-3 rounded"
+                >
+                    <option value="">URF</option>
+                    {urfOpts.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                </select>
+
                 <button
-                    onClick={() => {
-                        setSearchTerm(searchInput);
-                        setCurrentPage(1);
-                    }}
+                    onClick={onPesquisar}
                     className="bg-green-600 text-white rounded px-3 py-2"
                 >
                     Pesquisar
                 </button>
+
                 <button
                     onClick={limparFiltros}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition duration-300"
+                    className="bg-red-500 text-white rounded px-3 py-2"
                 >
                     Limpar
                 </button>
             </div>
 
-
+            {/* Loading */}
+            {loading && <div>Carregando...</div>}
 
             {/* Tabela */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 text-sm text-left">
-                    <thead>
-                        <tr className="bg-sky-900 text-white">
-                            {(Object.keys(labels) as (keyof Transacao)[])
-                                .filter(coluna => coluna !== 'id')
-                                .map(coluna => (
+            {!loading && data.length > 0 && (
+                <div className="overflow-x-auto">
+                    <table className="min-w-full border border-gray-300 text-sm text-left">
+                        <thead>
+                            <tr className="bg-sky-900 text-white">
+                                {colunas.map(coluna => (
                                     <th
                                         key={coluna}
-                                        onClick={() => toggleOrdem(coluna)}
-                                        className={`px-4 py-2 text-left cursor-pointer ${ordem.coluna === coluna ? 'bg-sky-800' : ''
-                                            }`}
+                                        className="px-4 py-2 cursor-pointer select-none"
+                                        onClick={() => handleSort(coluna)}
                                     >
-                                        {labels[coluna]}
+                                        {coluna.toUpperCase()}
                                         <span className="ml-1 text-xs">
-                                            {ordem.coluna === coluna
-                                                ? ordem.direcao === 'asc'
-                                                    ? '▲'
-                                                    : ordem.direcao === 'desc'
-                                                        ? '▼'
-                                                        : '↕'
+                                            {sortBy === coluna
+                                                ? (sortOrder === 'asc' ? '▲' : '▼')
                                                 : '↕'}
                                         </span>
                                     </th>
                                 ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {visiveis.map((row, i) => (
-                            <tr key={row.id} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'}>
-                                {(Object.keys(labels) as (keyof Transacao)[])
-                                    .filter(coluna => coluna !== 'id')
-                                    .map(coluna => (
-                                        <td key={coluna} className="px-4 py-2">{row[coluna]}</td>
-                                    ))}
                             </tr>
-                        ))}
-                    </tbody>
-
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {data.map((row, i) => (
+                                <tr key={row.id} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'}>
+                                    {colunas.map(coluna => (
+                                        <td key={coluna} className="px-4 py-2">
+                                            {(row as any)[coluna]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             {/* Paginação */}
-            <div className="flex justify-between items-center mt-4">
-                <button
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(p => p - 1)}
-                    className="px-4 py-2 rounded bg-sky-900 text-white disabled:bg-gray-300"
-                >
-                    Anterior
-                </button>
-                <span>
-                    Página {currentPage} de {totalPages}
-                </span>
-                <button
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(p => p + 1)}
-                    className="px-4 py-2 rounded bg-sky-900 text-white disabled:bg-gray-300"
-                >
-                    Próxima
-                </button>
-            </div>
+            {!loading && data.length > 0 && (
+                <div className="flex justify-between items-center mt-4">
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => fetchTransacoes(currentPage - 1)}
+                        className="px-4 py-2 bg-sky-900 text-white disabled:bg-gray-300"
+                    >
+                        Anterior
+                    </button>
+                    <span>Página {currentPage} de {totalPages}</span>
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => fetchTransacoes(currentPage + 1)}
+                        className="px-4 py-2 bg-sky-900 text-white disabled:bg-gray-300"
+                    >
+                        Próxima
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
