@@ -68,7 +68,7 @@ export default function SidebarLayout({ children }: SideBarProps) {
                   Pesquisar
                 </li>
               </a>
-                <li>
+                <li className="mt-10">
                   <DownloadButton/>
                 </li>
                 <li className="mt-2">
