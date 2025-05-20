@@ -4,7 +4,7 @@ export function formatarValor(valor: number): string {
     return `R$ ${milhoes.toLocaleString("pt-BR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    })} milhões`;
+    })} mi`;
   } else if (valor >= 1_000) {
     const milhares = valor / 1_000;
     return `R$ ${milhares.toLocaleString("pt-BR", {
