@@ -6,15 +6,15 @@ export type PathData = {
 }
 
 
-export const mostUsedRoutes = async (isExport: boolean, uf_id: number, year: number, year_end?: number): Promise<PathData[]> => {
+export const mostUsedRoutes = async (isExport: boolean, uf_id: number, year: number, year_start?: number): Promise<PathData[]> => {
   const type = isExport ? "exportacoes" : "importacoes"
   const url = `/api/${type}/vias-utilizadas`
   const data: { [key: string]: number } = {
     uf_id,
     ano: year,
   }
-  if (year_end) {
-    data['ano_final'] = year_end
+  if (year_start) {
+    data['ano_inicial'] = year_start
   }
 
   try {
