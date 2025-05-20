@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Map from "../pages/Map";
 import Home from "../pages/Home";
 import DataInsights from "../pages/DataInsights";
+import Search from "../pages/Search";
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,9 @@ const AppRoutes = () => {
       </Routes>
       <Routes>
         <Route path="/relatorios" element={<DataInsights />} />
+      </Routes>
+      <Routes>
+        <Route path="/pesquisa" element={<Search />} />
       </Routes>
     </Router>
   );
