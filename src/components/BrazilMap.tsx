@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Brazil from "@react-map/brazil";
 import AreaChart from "../components/AreaChart";
 // import { useGlobalState } from "../context/GlobalYearStateContext"; // Provavelmente não é mais necessário
-import YearForm from "./YearForm"; // Mantenha se ainda for usado, senão remova
 import TransactionTable from "./TransactionTable";
 import { BarChart } from "./PathBarChart";
 import { useExport } from "../context/ExportContext";
