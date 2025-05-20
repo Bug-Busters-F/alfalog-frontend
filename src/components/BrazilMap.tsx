@@ -10,15 +10,18 @@ import { processTopUrfs } from "../util/processTopURFs";
 import { processTopRoutes } from "../util/processTopRoutes";
 import { tradeBalance } from "../api/service/tradeBalance";
 import CardSum from "./CardSum";
+import { getStatsCard } from "../api/service/getStatsCard";
+import {formatarValor} from "../util/formatValor"
 
 const BrazilMapComponent: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [chartKey, setChartKey] = useState(0);
   const [isMapMinimized, setIsMapMinimized] = useState(false);
-  const [mostUsedURFSData, setMostUsedURFSData] = useState<any []>([]);
-  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any []>([]);
-  const [tradeBalanceData, setTradeBalanceData] = useState<any []>([]);
+  const [mostUsedURFSData, setMostUsedURFSData] = useState<any[]>([]);
+  const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any[]>([]);
+  const [tradeBalanceData, setTradeBalanceData] = useState<any[]>([]);
   const [showTransactionTable, setShowTransactionTable] = useState(1); // Estado para alternar entre os componentes
+  const [estatisticas, setEstatisticas] = useState<any | null>(null);
 
   const { selectedYear } = useGlobalState();
   const stateIds = JSON.parse(localStorage.getItem("UFs") || '{}');
@@ -67,6 +70,15 @@ const BrazilMapComponent: React.FC = () => {
         .catch((error) => {
           console.error("Erro ao buscar os dados:", error);
         });
+
+      getStatsCard(selectedState, Number(selectedYear), Number(selectedYear))
+        .then((data) => {
+          setEstatisticas(data)
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar dados do CardSum:", error);
+        });
     }
     console.log("Modo atual:", isExport ? "Exportação" : "Importação");
   }, [selectedState, selectedYear, isExport]);
@@ -75,15 +87,13 @@ const BrazilMapComponent: React.FC = () => {
     <div className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}>
       <h1 className="text-4xl pb-4 font-extrabold leading-none tracking-tight text-gray-800 ">Escolher Estados</h1>
       {isMapMinimized && selectedState && (
-        <div className="flex justify-between flex-wrap gap-4 pb-5">
-          <CardSum titulo='Total de Importações' valor='1.23 mi' tipo=""/>
-          <CardSum titulo='Total de Exportações' valor='1.23 mi' tipo=""/>
-          <CardSum titulo='Valor total Importado' valor='R$ 123mil' tipo="R$"/>
-          <CardSum titulo='Valor total Exportado' valor='R$ 123mil' tipo="R$"/>
-          <CardSum titulo='Total URFs no Brasil' valor='123' tipo=""/>
+        <div className="flex flex-wrap gap-4 pb-5 md:justify-between lg:justify-between sm: justify-center">
+          <CardSum titulo='Total de Importações' valor={estatisticas?.numero_total_importacoes?.toLocaleString() || "0"} tipo="" />
+          <CardSum titulo='Total de Exportações' valor={estatisticas?.numero_total_exportacoes?.toLocaleString() || "0"} tipo="" />
+          <CardSum titulo='Valor total Importado' valor={formatarValor(Number(estatisticas?.valor_agregado_total_importacao_reais)) || "R$ 0"} tipo="R$" />
+          <CardSum titulo='Valor total Exportado' valor={formatarValor(Number(estatisticas?.valor_agregado_total_exportacao_reais)) || "R$ 0"} tipo="R$" />
         </div>
-
-      ) }
+      )}
       <div className={`flex flex-col items-center ${isMapMinimized ? "lg:flex-row" : ""} gap-4 w-full`}>
         <div
           className={`relative transition-all duration-200 ${isMapMinimized ? "w-full sm:w-64 md:w-72 lg:w-80 h-auto cursor-default" : "w-full max-w-2xl mx-auto"}`}
