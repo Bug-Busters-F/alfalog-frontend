@@ -8,6 +8,10 @@ import { useExport } from "../context/ExportContext";
 import { processTopUrfs } from "../util/processTopURFs";
 import { processTopRoutes } from "../util/processTopRoutes";
 import { tradeBalance } from "../api/service/tradeBalance";
+
+import CardSum from "./CardSum";
+import { getStatsCard } from "../api/service/getStatsCard";
+import {formatarValor} from "../util/formatValor"
 import YearRangeSelector from "./YearRangeSelect"; // Verifique o caminho
 
 const allAvailableYears = [
@@ -31,6 +35,7 @@ const BrazilMapComponent: React.FC = () => {
   const [mostUsedURFSData, setMostUsedURFSData] = useState<any[]>([]);
   const [mostUsedRoutesData, setMostUsedRoutesData] = useState<any[]>([]);
   const [tradeBalanceData, setTradeBalanceData] = useState<any[]>([]);
+  const [estatisticas, setEstatisticas] = useState<any | null>(null);
   const [showTransactionTable, setShowTransactionTable] = useState(1);
 
   // Estados levantados do YearRangeSelector
@@ -119,6 +124,15 @@ const BrazilMapComponent: React.FC = () => {
             );
             setTradeBalanceData([]);
           });
+         
+        getStatsCard(selectedState, Number(startYear), Number(endYear))
+          .then((data) => {
+            setEstatisticas(data)
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar dados do CardSum:", error);
+          }); 
       } else {
         setMostUsedURFSData([]);
         setMostUsedRoutesData([]);
@@ -132,6 +146,7 @@ const BrazilMapComponent: React.FC = () => {
   }, [selectedState, isExport, startYear, endYear]);
 
   return (
+
     <div
       className={`flex flex-col w-full p-2 mb-4 md:p-4 lg:p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6`}
     >
@@ -154,6 +169,14 @@ const BrazilMapComponent: React.FC = () => {
           isMapMinimized ? "lg:flex-row" : ""
         } gap-4 w-full mt-6`}
       >
+        {isMapMinimized && selectedState && (
+        <div className="flex flex-wrap gap-4 pb-5 md:justify-between lg:justify-between sm: justify-center">
+          <CardSum titulo='Total de Importações' valor={estatisticas?.numero_total_importacoes?.toLocaleString() || "0"} tipo="" />
+          <CardSum titulo='Total de Exportações' valor={estatisticas?.numero_total_exportacoes?.toLocaleString() || "0"} tipo="" />
+          <CardSum titulo='Valor total Importado' valor={formatarValor(Number(estatisticas?.valor_agregado_total_importacao_reais)) || "R$ 0"} tipo="R$" />
+          <CardSum titulo='Valor total Exportado' valor={formatarValor(Number(estatisticas?.valor_agregado_total_exportacao_reais)) || "R$ 0"} tipo="R$" />
+        </div>
+      )}
         <div
           className={`relative transition-all duration-200 ${
             isMapMinimized
@@ -180,6 +203,7 @@ const BrazilMapComponent: React.FC = () => {
             />
             {isMapMinimized && selectedState && (
               <button
+
                 onClick={resetMapAndState}
                 className="bg-sky-900 hover:from-blue-700 hover:bg-sky-700 text-white font-semibold py-2 rounded-lg shadow-lg"
                 style={{ pointerEvents: "auto" }}
