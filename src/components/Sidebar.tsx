@@ -63,7 +63,12 @@ export default function SidebarLayout({ children }: SideBarProps) {
                   Relatórios
                 </li>
               </a>
-                <li>
+              <a href="/pesquisa">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Pesquisar
+                </li>
+              </a>
+                <li className="mt-10">
                   <DownloadButton/>
                 </li>
                 <li className="mt-2">
