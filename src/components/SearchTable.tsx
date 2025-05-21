@@ -31,7 +31,7 @@ interface Option {
 const rowsPerPage = 10;
 
 const SearchTable: React.FC = () => {
-    const [filtros, setFiltros] = useState<Partial<Record<'coAno' | 'coMes' | 'coPais' | 'sgUfNcm' | 'coVia' | 'coUrf', string>>>({});
+    const [filtros, setFiltros] = useState<Partial<Record<'coAno' | 'coMes' | 'coPais' | 'sgUfNcm' | 'coVia' | 'noUrf', string>>>({});
     const [searchInput, setSearchInput] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [data, setData] = useState<Transacao[]>([]);
@@ -67,7 +67,7 @@ const SearchTable: React.FC = () => {
                     axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coPais'),
                     axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=sgUfNcm'),
                     axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coVia'),
-                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=coUrf'),
+                    axios.get<{ values: Option[] }>('http://localhost:5000/api/transacoes/distinct?field=noUrf'),
                 ]);
 
                 setAnosOpts(respAnos.data.values);
@@ -120,7 +120,7 @@ const SearchTable: React.FC = () => {
     };
 
     const handleFiltroChange = (
-        campo: 'coAno' | 'coMes' | 'coPais' | 'sgUfNcm' | 'coVia' | 'coUrf',
+        campo: 'coAno' | 'coMes' | 'coPais' | 'sgUfNcm' | 'coVia' | 'noUrf',
         valor: string
     ) => {
         setFiltros(prev => ({
@@ -217,8 +217,8 @@ const SearchTable: React.FC = () => {
                 </select>
 
                 <select
-                    value={filtros.coUrf || ''}
-                    onChange={e => handleFiltroChange('coUrf', e.target.value)}
+                    value={filtros.noUrf || ''}
+                    onChange={e => handleFiltroChange('noUrf', e.target.value)}
                     className="border px-3 rounded"
                 >
                     <option value="">URF</option>
