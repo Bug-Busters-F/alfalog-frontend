@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { IoIosArrowForward } from "react-icons/io";
+import BtnNCMGraph from './BtnNCMGraph';
 
 interface NcmEntry {
     code: string;
@@ -108,7 +108,7 @@ const NCMTable: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     {item.description}
                                     <div>
-                                        <IoIosArrowForward />
+                                        <BtnNCMGraph ncm={item.code}/>
                                     </div>
                                 </div>
                             </td>
