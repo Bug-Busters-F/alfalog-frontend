@@ -6,12 +6,12 @@ export type TradeData = {
 }
 
 
-export const mostUsedUFRS = async (isExport: boolean, uf_id: number, year: number, year_end?: number): Promise<TradeData[]> => {
+export const mostUsedUFRS = async (isExport: boolean, uf_id: number, year_start: number, year_end?: number): Promise<TradeData[]> => {
   const type = isExport ? "exportacoes" : "importacoes"
   const url = `/api/${type}/urfs-utilizadas`
   const data: { [key: string]: number } = {
     uf_id,
-    ano: year,
+    ano_inicial: year_start,
   }
   if (year_end) {
     data['ano_final'] = year_end
