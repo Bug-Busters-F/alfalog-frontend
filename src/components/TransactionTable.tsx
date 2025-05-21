@@ -77,7 +77,7 @@ const PaginatedTable: React.FC<PaginatedTableProps> = ({
       </div>
 
       {/* Tabela */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded">
         <table className="min-w-full border-collapse">
           <thead>
             <tr className="bg-sky-900 text-white">
