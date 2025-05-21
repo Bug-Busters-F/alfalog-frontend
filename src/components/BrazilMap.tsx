@@ -164,19 +164,20 @@ const BrazilMapComponent: React.FC = () => {
         setIsRangeMode={setIsRangeMode}
         allAvailableYears={allAvailableYears}
       />
-      <div
-        className={`flex flex-col ${
-          isMapMinimized ? "lg:flex-row" : ""
-        } gap-4 w-full mt-6`}
-      >
-        {isMapMinimized && selectedState && (
-        <div className="flex flex-wrap gap-4 pb-5 md:justify-between lg:justify-between sm: justify-center">
+      {isMapMinimized && selectedState && (
+        <div className="flex flex-wrap gap-4 py-5 md:justify-between lg:justify-between sm: justify-center">
           <CardSum titulo='Total de Importações' valor={estatisticas?.numero_total_importacoes?.toLocaleString() || "0"} tipo="" />
           <CardSum titulo='Total de Exportações' valor={estatisticas?.numero_total_exportacoes?.toLocaleString() || "0"} tipo="" />
           <CardSum titulo='Valor total Importado' valor={formatarValor(Number(estatisticas?.valor_agregado_total_importacao_reais)) || "R$ 0"} tipo="R$" />
           <CardSum titulo='Valor total Exportado' valor={formatarValor(Number(estatisticas?.valor_agregado_total_exportacao_reais)) || "R$ 0"} tipo="R$" />
         </div>
       )}
+      <div
+        className={`flex flex-col ${
+          isMapMinimized ? "lg:flex-row" : ""
+        } gap-4 w-full mt-6`}
+      >
+        
         <div
           className={`relative transition-all duration-200 ${
             isMapMinimized
