@@ -16,7 +16,7 @@ const CardSum = (props: Props) => {
         tipoICon = <IoStatsChart color='#00a63e' size={20}/>     
     }
   return (
-    <div className='flex w-[50%] sm:w-[40%] md:w-[45%] lg:w-[18%] bg-white shadow-md p-4 rounded-2xl items-center gap-5'>
+    <div className='flex w-[90%] sm:w-[90%] md:w-[45%] lg:w-[18%] bg-white shadow-md p-4 rounded-2xl items-center gap-5'>
         <div className='rounded-full w-10 h-10 bg-gray-200 flex items-center justify-center'>
            {tipoICon}
         </div>

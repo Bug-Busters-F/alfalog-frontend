@@ -98,16 +98,16 @@ const ComparationStates = () => {
         Comparar Estados
       </h1>
 
-      <div className="flex justify-between flex-wrap h-full">
-        <div className="flex flex-wrap items-center">
-          <div className="relative inline-block text-left p-5">
+      <div className="flex justify-between items-center flex-wrap h-full">
+        <div className="flex items-center">
+          <div className="inline-block text-left p-5">
             <label className="block mb-1 text-base font-medium text-gray-700">
               Selecione um estado
             </label>
             <select
               value={estado1}
               onChange={(e) => setEstado1(e.target.value)}
-              className="block w-60 rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
+              className="block w-[100%] rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
             >
               {estados_brasil.map((estado) => (
                 <option key={estado} value={estado}>{estado}</option>
@@ -122,7 +122,7 @@ const ComparationStates = () => {
             <select
               value={estado2}
               onChange={(e) => setEstado2(e.target.value)}
-              className="block w-60 rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
+              className="block w-[100%] rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
             >
               {estados_brasil.filter(e => e !== estado1).map((estado) => (
                 <option key={estado} value={estado}>{estado}</option>
@@ -131,15 +131,15 @@ const ComparationStates = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center">
-          <div className="relative inline-block text-left p-5">
+        <div className="flex items-center">
+          <div className=" text-left p-5">
             <label className="block mb-1 text-base font-medium text-gray-700">
               Ano Inicial
             </label>
             <select
               value={anoInicial}
               onChange={(e) => setAnoInicial(e.target.value)}
-              className="block w-60 rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
+              className="block w-[100%] px-6 rounded-xl border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
             >
               {anos.map((ano) => (
                 <option key={ano} value={ano.toString()}>{ano}</option>
@@ -147,14 +147,14 @@ const ComparationStates = () => {
             </select>
           </div>
 
-          <div className="relative inline-block text-left p-5">
+          <div className=" text-left p-5">
             <label className="block mb-1 text-base font-medium text-gray-700">
               Ano Final
             </label>
             <select
               value={anoFinal}
               onChange={(e) => setAnoFinal(e.target.value)}
-              className="block w-60 rounded-xl border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
+              className="block w-[100%] px-6 rounded-xl border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition duration-200"
             >
               {anos
                 .filter(ano => ano >= parseInt(anoInicial))
