@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ComparationChart from "../components/ComparationChart";
 import { getComparationStates } from "../api/service/getComparationStates";
+import { useExport } from "../context/ExportContext";
 
 const stateIds: { [key: string]: number } = {
   "Acre": 1,
@@ -33,6 +34,7 @@ const stateIds: { [key: string]: number } = {
 };
 
 const ComparationStates = () => {
+  const {isExport} = useExport()
   const indicadores = ["Valor FOB", "Peso (Kg)"];
   const estados_brasil = Object.keys(stateIds);
 
@@ -68,7 +70,7 @@ const ComparationStates = () => {
           estados: [estado1Id, estado2Id],
           ano_inicial: parseInt(anoInicial),
           ano_final: parseInt(anoFinal),
-        });
+        }, isExport);
 
         // Transforma os dados para o formato esperado pelo gráfico
         const dadosTransformados = response.map((item: any) => ({
@@ -88,7 +90,7 @@ const ComparationStates = () => {
     };
     
     buscarDados();
-  }, [estado1, estado2, anoInicial, anoFinal, indicador]);
+  }, [estado1, estado2, anoInicial, anoFinal, indicador, isExport]);
 
   return (
     <div className="flex flex-col mb-4 bg-white border border-gray-200 rounded-lg shadow-sm">
