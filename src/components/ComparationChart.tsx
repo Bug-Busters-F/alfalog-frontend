@@ -23,6 +23,7 @@ interface ChartOptions {
       stops: number[];
     };
   };
+  colors?: string[];
 }
 
 interface ChartSeries {
@@ -31,41 +32,62 @@ interface ChartSeries {
 }
 
 interface Data {
-  state: string;
+  state: number;
   value: number;
   year: number;
+  estadoNome: string;
 }
 
 interface LineChartProps {
   data: Data[];
   serie: string;
+  estado1: string;
+  estado2: string;
 }
 
-const LineChart: React.FC<LineChartProps> = ({ data }) => {
-  const estados = Array.from(new Set(data.map((item) => item.state)));
+const LineChart: React.FC<LineChartProps> = ({ data, serie, estado1, estado2 }) => {
+  // Cores para as séries (pode personalizar)
+  const colors = ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"];
 
-  const series: ChartSeries[] = estados.map((estado) => ({
-    name: estado,
-    data: data
-      .filter((item) => item.state === estado)
-      .sort((a, b) => a.year - b.year)
-      .map((item) => item.value),
-  }));
+  // Agrupa os dados por estado
+  const series: ChartSeries[] = [
+    {
+      name: estado1,
+      data: data
+        .filter((item) => item.estadoNome === estado1)
+        .sort((a, b) => a.year - b.year)
+        .map((item) => item.value),
+    },
+    {
+      name: estado2,
+      data: data
+        .filter((item) => item.estadoNome === estado2)
+        .sort((a, b) => a.year - b.year)
+        .map((item) => item.value),
+    },
+  ];
+
+  // Obtém os anos únicos para o eixo X
+  const years = Array.from(new Set(data.map((item) => item.year)))
+    .sort()
+    .map((year) => year.toString());
 
   const options: ChartOptions = {
     chart: {
-      id: "line-chart",
+      id: "comparison-chart",
       toolbar: { show: true },
     },
     xaxis: {
-      categories: Array.from(new Set(data.map((item) => item.year.toString()))),
+      categories: years,
     },
     stroke: { curve: "smooth" },
+    colors: colors,
   };
 
   return (
     <div className="p-5 rounded-lg shadow-md">
       <div className="shadow-md border-b border-sky-700 rounded-lg">
+        <h2 className="text-xl font-semibold mb-4 text-gray-800">{serie} - Comparação entre {estado1} e {estado2}</h2>
         <Chart
           options={options}
           series={series}
@@ -77,4 +99,5 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     </div>
   );
 };
+
 export default LineChart;
