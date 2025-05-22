@@ -2,7 +2,6 @@ import FilteredDataBarChart from "../components/RemovedEntriesChart"
 import SidebarLayout from "../components/Sidebar"
 import { GlobalYearStateProvider } from "../context/GlobalYearStateContext"
 import { ExportContextProvider } from "../context/ExportContext";
-import CardAscDec from "../components/CardAscDec";
 
 const sampleData = [
   { label: 'Unid. medida inválida', removedCount: 47 },
@@ -24,7 +23,6 @@ const DataInsights = () => {
       <GlobalYearStateProvider>
         <SidebarLayout>
           <div className="p-6 md:p-10 max-w-4xl mx-auto text-gray-800">
-            <CardAscDec />
             <h1 className="text-2xl font-semibold mb-4 text-center">Relatório de Linhas Removidas</h1>
             <p className="mb-4 text-lg text-justify">
               Esta seção apresenta insights sobre a qualidade e consistência dos dados utilizados na plataforma Alfalog, com foco na identificação de informações descartadas durante o processo de normalização.

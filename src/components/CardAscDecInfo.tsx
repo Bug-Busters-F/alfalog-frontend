@@ -26,7 +26,7 @@ const InfoButton: React.FC<InfoButtonProps> = ({
       </button>
 
       {showInfo && (
-        <div className="absolute z-10 mt-2 p-4 w-96 bg-white border border-gray-300 rounded shadow-lg right-0">
+        <div className="absolute z-10 bottom-full mt-2 p-4 w-96 bg-white border border-gray-300 rounded shadow-lg right-0">
           <p className="text-sm text-gray-800">{message}</p>
           <img
             src={imageSrc}
