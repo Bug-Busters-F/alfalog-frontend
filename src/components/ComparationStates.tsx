@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ComparationChart from "../components/ComparationChart";
 import { getComparationStates } from "../api/service/getComparationStates";
 import { useExport } from "../context/ExportContext";
+import { tradeBalanceComparacao } from "../api/service/tradeBalance";
 
 const stateIds: { [key: string]: number } = {
   "Acre": 1,
@@ -32,10 +33,16 @@ const stateIds: { [key: string]: number } = {
   "Mato Grosso do Sul": 26,
   "Rondônia": 34,
 };
+interface StateData {
+  state: number;
+  year: number;
+  value: number;
+  estadoNome: string;
+}
 
 const ComparationStates = () => {
-  const {isExport} = useExport()
-  const indicadores = ["Valor FOB", "Peso (Kg)"];
+  const { isExport } = useExport();
+  const indicadores = ["Valor FOB", "Peso (Kg)", "Balança Comercial"];
   const estados_brasil = Object.keys(stateIds);
 
   const anos = [
@@ -57,29 +64,51 @@ const ComparationStates = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const estado1Id = stateIds[estado1];
         const estado2Id = stateIds[estado2];
+        const anoInicialNum = parseInt(anoInicial);
+        const anoFinalNum = parseInt(anoFinal);
 
         if (!estado1Id || !estado2Id) {
           setError("Estados inválidos selecionados");
           return;
         }
 
-        const response = await getComparationStates({
-          estados: [estado1Id, estado2Id],
-          ano_inicial: parseInt(anoInicial),
-          ano_final: parseInt(anoFinal),
-        }, isExport);
+        let dadosTransformados: StateData[] = [];
 
-        // Transforma os dados para o formato esperado pelo gráfico
-        const dadosTransformados = response.map((item: any) => ({
-          state: item.state,
-          year: item.year,
-          value: item[indicador] ?? 0, // Usa o nome do campo diretamente como vem do backend
-          estadoNome: estado1Id === item.state ? estado1 : estado2
-        }));
+        if (indicador === "Balança Comercial") {
+          const response = await tradeBalanceComparacao([estado1Id, estado2Id]);
 
+          dadosTransformados = response.flatMap((estadoData) => {
+            const nomeEstado =
+              estadoData.uf_id === estado1Id ? estado1 : estado2;
+            return estadoData.balanca
+              .map((item) => ({
+                state: estadoData.uf_id,
+                year: item.year,
+                value: item.value,
+                estadoNome: nomeEstado,
+              }));
+          });
+        } else {
+          const response = await getComparationStates(
+            {
+              estados: [estado1Id, estado2Id],
+              ano_inicial: anoInicialNum,
+              ano_final: anoFinalNum,
+            },
+            isExport
+          );
+
+          dadosTransformados = response.map((item: any) => ({
+            state: item.state,
+            year: item.year,
+            value: item[indicador] ?? 0,
+            estadoNome: item.state === estado1Id ? estado1 : estado2,
+          }));
+        }
+        
         setDataFiltrada(dadosTransformados);
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
