@@ -92,7 +92,7 @@ const YearRangeSelector: React.FC<YearRangeSelectorProps> = ({
   };
 
   return (
-    <div className="p-4 space-y-4 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+    <div className="p-4 space-y-4 bg-white shadow-sm rounded-lg text-gray-900">
       {/* The condition `!isStateSelected` determines when the selector is shown */}
       {/* If you want the user to select a year range *before* selecting a state, keep this condition */}
       {/* If you want the user to select a range *after* selecting a state (e.g., for time series data), remove or change this condition */}
@@ -104,11 +104,11 @@ const YearRangeSelector: React.FC<YearRangeSelectorProps> = ({
               id="rangeModeToggle"
               checked={isRangeMode}
               onChange={toggleRangeMode}
-              className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+              className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded  focus:ring-blue-500 focus:ring-2 cursor-pointer"
             />
             <label
               htmlFor="rangeModeToggle"
-              className="text-sm font-medium text-gray-900 dark:text-white cursor-pointer"
+              className="text-sm font-medium text-gray-900 cursor-pointer"
             >
               Selecionar intervalo de anos
             </label>
@@ -129,7 +129,7 @@ const YearRangeSelector: React.FC<YearRangeSelectorProps> = ({
             {/* Formulário para Ano Final (mostrado apenas no modo intervalo) */}
             {isRangeMode && (
               <>
-                <span className="text-gray-700 dark:text-gray-300 pb-2.5 hidden sm:block">
+                <span className="text-gray-600 pb-2.5 hidden sm:block">
                   até
                 </span>
                 <CustomYearForm
@@ -147,8 +147,8 @@ const YearRangeSelector: React.FC<YearRangeSelectorProps> = ({
       )}
 
       {/* Exibição do período selecionado - Can be shown regardless of isStateSelected */}
-      <div className="mt-6 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-        <p className="text-md font-semibold text-gray-900 dark:text-white">
+      <div className="mt-6 p-3 bg-gray-100 rounded-lg">
+        <p className="text-md font-semibold text-gray-900 ">
           Período:{" "}
           <span className="font-bold text-blue-600 dark:text-blue-400">
             {displaySelectedPeriod()}

@@ -42,7 +42,7 @@ export async function getStatsCard(
   }
 
   try {
-    const response = await axios.get("http://127.0.0.1:5000/api/estatisticas-comerciais", {
+    const response = await axios.get("api/estatisticas-comerciais", {
       params: {
         estado: sigla,
         ano_inicio: anoInicio,
