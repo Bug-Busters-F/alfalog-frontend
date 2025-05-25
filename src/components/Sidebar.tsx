@@ -58,6 +58,11 @@ export default function SidebarLayout({ children }: SideBarProps) {
                   Dashboard
                 </li>
               </a>
+              <a href="/previsoes">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Previsões
+                </li>
+              </a>
               <a href="/relatorios">
                 <li className="mb-2 p-2 hover:bg-sky-800 rounded">
                   Relatórios

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchForecastExportData, fetchForecastImportData, fetchForecastTradeBalanceData } from "../api/service/fetchForecastData";
 import ForecastChart from "./ForecastChart";
+import ForecastTrendChart from "./ForecastTrendChart"
 
 
 type ForecastType = 1 | 2 | 3; // 1: Balança, 2: Exportações, 3: Importações
@@ -26,7 +27,7 @@ const ForecastSelector: React.FC = () => {
     }, [selectedForecast]);
 
     return (
-        <div className="flex flex-col mb-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="flex flex-col mx-5 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm">
 
             <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-800 p-5">
                 Previsões
@@ -70,6 +71,9 @@ const ForecastSelector: React.FC = () => {
             {/* Gráfico */}
             <div className="w-full overflow-x-auto">
                 <ForecastChart data={forecastData} forecastType={selectedForecast} />
+            </div>
+            <div className="w-full overflow-x-auto">
+                <ForecastTrendChart data={forecastData} forecastType={selectedForecast} />
             </div>
         </div>
     );

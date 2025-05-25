@@ -3,11 +3,9 @@ import Plot from 'react-plotly.js';
 
 interface DataPoint {
   ds: string;
-  y: number;
   trend?: number;
-  yhat: number;
-  yhat_lower: number;
-  yhat_upper: number;
+  trend_lower: number;
+  trend_upper: number;
 }
 
 interface ForecastChartProps {
@@ -15,12 +13,10 @@ interface ForecastChartProps {
   forecastType: 1 | 2 | 3; // 1: Balança, 2: Exportações, 3: Importações
 }
 
-const ForecastChart: React.FC<ForecastChartProps> = ({ data, forecastType }) => {
+const ForecastTrendChart: React.FC<ForecastChartProps> = ({ data, forecastType }) => {
   const x = data.map(d => d.ds);
-  const y = data.map(d => d.y);
-  const yhat = data.map(d => d.yhat);
-  const yhatLower = data.map(d => d.yhat_lower);
-  const yhatUpper = data.map(d => d.yhat_upper);
+  const trendLower = data.map(d => d.trend_lower);
+  const trendUpper = data.map(d => d.trend_upper);
   const trend = data.map(d => d.trend ?? null);
 
   let title
@@ -30,13 +26,13 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ data, forecastType }) => 
 
   return (
     <div className="p-4 bg-white shadow rounded-xl">
-      <h2 className="text-xl font-bold mb-2">{title}</h2>
+      <h2 className="text-xl font-bold mb-2">Tendência com intervalo de confiança</h2>
 
       <Plot
         data={[
           {
             x: [...x, ...x.slice().reverse()],
-            y: [...yhatUpper, ...yhatLower.slice().reverse()],
+            y: [...trendUpper, ...trendLower.slice().reverse()],
             fill: 'toself',
             fillcolor: 'rgba(30, 136, 229, 0.2)',
             line: { color: 'transparent' },
@@ -46,28 +42,11 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ data, forecastType }) => 
           },
           {
             x,
-            y: yhat,
-            type: 'scatter',
-            mode: 'lines+markers',
-            name: 'Previsão',
-            line: { color: '#e53935' },
-          },
-          {
-            x,
             y: trend,
             type: 'scatter',
             mode: 'lines',
             name: 'Tendência',
-            line: { color: '#1A237E', dash: 'dot' },
-          },
-          {
-            x,
-            y,
-            type: 'scatter',
-            mode: 'lines+markers',
-            name: 'Valor Real',
-            line: { color: '#2E7D32' },
-            marker: { color: '#2E7D32', size: 6 },
+            line: { color: '#1A237E', },
           },
         ]}
         layout={{
@@ -76,7 +55,7 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ data, forecastType }) => 
           yaxis: { title: 'Valor Agregado (R$/kg)' },
           autosize: true,
           margin: { t: 50, l: 50, r: 50, b: 50 },
-          legend: { orientation: 'h', y: 0.1 },
+          legend: { orientation: 'h', y: -0.1 },
         }}
         style={{ width: '100%', height: '500px' }}
       />
@@ -84,4 +63,4 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ data, forecastType }) => 
   );
 };
 
-export default ForecastChart;
+export default ForecastTrendChart;
