@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NCMBarChart from "./NCMGraph/TopUFs";
+import NCMBarChart from "./NCMBarChart";
 import { getFormattedSearchGraph, searchGraphResponseFormatted } from "../util/processSearchGraphData";
 import { useExport } from "../context/ExportContext";
 import { tradeBalanceNCM, Result } from "../api/service/tradeBalanceNCM";

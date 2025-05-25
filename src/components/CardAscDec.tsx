@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import PeriodoSelector from "../components/CardAscDecPeriodSelector"
 import CardLineChart from "./CardAscDecChart"
-import { fetchEstadosAscensaoDeclinio, EstadoRanking } from "../api/service/cardAscDecRoute"
+import { fetchEstadosAscensaoDeclinio } from "../api/service/cardAscDecRoute"
 import InfoButton from "./CardAscDecInfo"
 
 const CardAscDec = () => {

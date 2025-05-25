@@ -1,4 +1,4 @@
-import { BarChart } from "../PathBarChart";
+import { BarChart } from "./PathBarChart";
 
 interface NCMBarChartProps {
     data: { name: string; value: number }[];
