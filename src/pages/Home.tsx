@@ -1,7 +1,7 @@
 import SidebarLayout from "../components/Sidebar";
 import { ExportContextProvider } from "../context/ExportContext";
 import { GlobalYearStateProvider } from "../context/GlobalYearStateContext";
-
+import CardAscDec from "../components/CardAscDec";
 
 const Home = () => {
   return (
@@ -61,6 +61,7 @@ const Home = () => {
                   <p className="text-gray-600">Compare o desempenho de diferentes estados ao longo dos anos.</p>
                 </div>
               </div>
+              <CardAscDec />
             </div>
           </SidebarLayout>
         </GlobalYearStateProvider>

@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Map from "../pages/Map";
 import Home from "../pages/Home";
 import DataInsights from "../pages/DataInsights";
+import Search from "../pages/Search";
+import Forecast from "../pages/Forecast"
 
 const AppRoutes = () => {
   return (
@@ -13,7 +15,13 @@ const AppRoutes = () => {
         <Route path="/mapa" element={<Map />} />
       </Routes>
       <Routes>
+        <Route path="/previsoes" element={<Forecast />} />
+      </Routes>
+      <Routes>
         <Route path="/relatorios" element={<DataInsights />} />
+      </Routes>
+      <Routes>
+        <Route path="/pesquisa" element={<Search />} />
       </Routes>
     </Router>
   );

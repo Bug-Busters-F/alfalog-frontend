@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, ReactNode } from "react";
 import logo from "../assets/logo.png";
 import ExportSwitch from "./ExportSwitch";
 import { FaGithub } from "react-icons/fa";
-import DownloadButton from "./downloadButton";
+import DownloadButton from "./DownloadButton";
 
 interface SideBarProps {
   children?: ReactNode;
@@ -58,12 +58,22 @@ export default function SidebarLayout({ children }: SideBarProps) {
                   Dashboard
                 </li>
               </a>
+              <a href="/previsoes">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Previsões
+                </li>
+              </a>
               <a href="/relatorios">
                 <li className="mb-2 p-2 hover:bg-sky-800 rounded">
                   Relatórios
                 </li>
               </a>
-                <li>
+              <a href="/pesquisa">
+                <li className="mb-2 p-2 hover:bg-sky-800 rounded">
+                  Pesquisar
+                </li>
+              </a>
+                <li className="mt-10">
                   <DownloadButton/>
                 </li>
                 <li className="mt-2">

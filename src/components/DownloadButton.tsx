@@ -1,7 +1,7 @@
 const DownloadButton = () => {
   const handleDownload = async (tipo: "exportacoes" | "importacoes") => {
     try {
-      const response = await fetch(`http://localhost:5000/api/${tipo}/download`, {
+      const response = await fetch(`/api/${tipo}/download`, {
         method: "GET"
       });
 
