@@ -17,7 +17,7 @@ const Forecast = () => {
               </h2>
               <div className="mx-0 my-10 me-20">
                 <p className="my-5 text-lg text-justify leading-9">
-                  A simulação de tendências da Balança Comercial foi realizada com os modelos de <a href="https://en.wikipedia.org/wiki/Exponential_smoothing" target="_blank" rel="noopener noreferrer" className="text-sky-800">Suavização Exponencial Holt-Winters</a> e o método probabilístico de <a href="https://pt.wikipedia.org/wiki/M%C3%A9todo_de_Monte_Carlo" target="_blank" rel="noopener noreferrer" className="text-sky-800">Monte Carlo</a> com intervalo de confiança de 80%.
+                  A simulação de tendências da Balança Comercial foi realizada com os modelos de <a href="https://en.wikipedia.org/wiki/Exponential_smoothing" target="_blank" rel="noopener noreferrer" className="text-sky-800">Suavização Exponencial Holt-Winters</a> e o método probabilístico de <a href="https://pt.wikipedia.org/wiki/M%C3%A9todo_de_Monte_Carlo" target="_blank" rel="noopener noreferrer" className="text-sky-800">Monte Carlo</a> com intervalo de confiança de 95%.
                 </p>
                 <p className="my-5 text-lg text-justify leading-9">
                   Foi utilizado o modelo de Holt-Winter com intuito de aplicar uma Suavização Exponencial nos dados históricos. As vantagens observadas foram sua capacidade de
@@ -28,7 +28,7 @@ const Forecast = () => {
                   <li>É simples de aplicar e ajusta-se dinamicamente à evolução da série temporal.</li>
                 </ul>
                 <p className="my-5 text-lg text-justify leading-9">
-                  Para a análise das tendências do comércio exterior nos próximos anos, foi utilizado modelo de Monte Carlo através da biblioteca <a href="https://facebook.github.io/prophet/" target="_blank" rel="noopener noreferrer" className="text-sky-800">Prophet</a> configurado para um intervalo de confiança de 80%.
+                  Para a análise das tendências do comércio exterior nos próximos anos, foi utilizado modelo de Monte Carlo através da biblioteca <a href="https://facebook.github.io/prophet/" target="_blank" rel="noopener noreferrer" className="text-sky-800">Prophet</a> configurado para um intervalo de confiança de 95%.
                   A Prophet realiza simulações aplicando esse modelo sobre os dados históricos. Assim, foi possível simular o comportamento do comércio exterior nos próximos anos. Esse modelo foi escolhido pelas seguintes vantagens:
                 </p>
                 <ul className="m-5 list-disc text-lg leading-9">
